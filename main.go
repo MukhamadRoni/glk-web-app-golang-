@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"sync"
 	"time"
 
@@ -73,7 +74,11 @@ func main() {
 // newPelamarApp builds the Fiber application for Web Pelamar (port 8081).
 // ─────────────────────────────────────────────────────────────────────────────
 func newPelamarApp() *fiber.App {
-	engine := html.New("./views", ".html")
+	engine := html.NewFileSystem(http.Dir("./views"), ".html")
+	engine.Reload(true) // Enable hot-reload for templates
+	engine.AddFunc("add", func(x, y int) int {
+		return x + y
+	})
 
 	app := fiber.New(fiber.Config{
 		AppName: "GLK Web Pelamar",
@@ -117,7 +122,11 @@ func newPelamarApp() *fiber.App {
 // Includes both web routes and API v1 routes.
 // ─────────────────────────────────────────────────────────────────────────────
 func newAdminApp() *fiber.App {
-	engine := html.New("./views", ".html")
+	engine := html.NewFileSystem(http.Dir("./views"), ".html")
+	engine.Reload(true) // Enable hot-reload for templates
+	engine.AddFunc("add", func(x, y int) int {
+		return x + y
+	})
 
 	app := fiber.New(fiber.Config{
 		AppName: "GLK Web Admin",
