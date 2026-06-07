@@ -34,6 +34,7 @@ func ProcessLogin(c *fiber.Ctx) error {
 	}
 	sess.Set("admin_id", admin.ID)
 	sess.Set("admin_username", admin.Username)
+	sess.Set("admin_role_id", admin.RoleID)
 	if err := sess.Save(); err != nil {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}

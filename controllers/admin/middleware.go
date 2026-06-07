@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
+	"glk-web-app/config"
 	"glk-web-app/models"
 )
 
@@ -26,6 +27,7 @@ func AuthRequired(c *fiber.Ctx) error {
 	}
 	c.Locals("admin_id", sess.Get("admin_id"))
 	c.Locals("admin_username", sess.Get("admin_username"))
+	c.Locals("admin_role_id", sess.Get("admin_role_id"))
 	return c.Next()
 }
 
@@ -41,15 +43,34 @@ func APIAuthRequired(c *fiber.Ctx) error {
 	}
 	c.Locals("admin_id", sess.Get("admin_id"))
 	c.Locals("admin_username", sess.Get("admin_username"))
+	c.Locals("admin_role_id", sess.Get("admin_role_id"))
 	return c.Next()
 }
 
 // contextData merges common template variables (from session) with page-specific data.
 func contextData(c *fiber.Ctx, extra fiber.Map) fiber.Map {
+	roleID := c.Locals("admin_role_id")
+	
+	var allowedMenus []models.Menu
+	if roleID != nil {
+		var roleMenus []models.RoleMenu
+		config.DB.Where("role_id = ?", roleID).Find(&roleMenus)
+		
+		allowedCodes := make(map[string]bool)
+		for _, rm := range roleMenus {
+			allowedCodes[rm.MenuCode] = true
+		}
+		
+		var allMenus []models.Menu
+		config.DB.Where("parent_id IS NULL").Preload("Children.Children").Find(&allMenus)
+		
+		allowedMenus = models.FilterMenus(allMenus, allowedCodes)
+	}
+
 	data := fiber.Map{
 		"Username":  c.Locals("admin_username"),
 		"Timestamp": time.Now(),
-        "Menus":     models.AdminMenus,
+		"Menus":     allowedMenus,
 	}
 	for k, v := range extra {
 		data[k] = v

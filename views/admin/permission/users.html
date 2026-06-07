@@ -1,0 +1,81 @@
+{{define "styles"}}
+<link rel="stylesheet" href="/static/libs/gridjs/theme/mermaid.min.css">
+{{end}}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">Users List</h4>
+            </div>
+            <div class="card-body">
+                <div id="table-users"></div>
+                <table id="raw-table-users">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Username</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ range $i, $u := .Users }}
+                        <tr>
+                            <td>{{ add $i 1 }}</td>
+                            <td>{{ $u.Username }}</td>
+                            <td>{{ if $u.Role.Name }}{{ $u.Role.Name }}{{ else }}<span class="badge bg-secondary">None</span>{{ end }}</td>
+                        </tr>
+                        {{ end }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">Add User</h4>
+            </div>
+            <div class="card-body">
+                <form action="/admin/permission/users" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username" required placeholder="Enter username">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" required placeholder="Enter password">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Role</label>
+                        <select class="form-select" name="role_id" required>
+                            <option value="">-- Select Role --</option>
+                            {{ range .Roles }}
+                            <option value="{{ .ID }}">{{ .Name }}</option>
+                            {{ end }}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary waves-effect btn-label waves-light">
+                        <i class="bx bx-user-plus label-icon"></i> Save User
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{define "scripts"}}
+<script src="/static/libs/gridjs/gridjs.umd.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (document.getElementById("raw-table-users")) {
+            new gridjs.Grid({
+                from: document.getElementById("raw-table-users"),
+                pagination: { limit: 5 },
+                sort: true,
+                search: true,
+            }).render(document.getElementById("table-users"));
+        }
+    });
+</script>
+{{end}}

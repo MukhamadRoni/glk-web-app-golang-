@@ -10,9 +10,10 @@
     <link href="/static/css/icons.min.css" rel="stylesheet" type="text/css" />
     <link href="/static/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
     <link href="/static/libs/node-waves/waves.min.css" rel="stylesheet" type="text/css" />
+    {{block "styles" .}}{{end}}
 </head>
 
-<body data-sidebar="dark" data-sidebar-size="lg">
+<body>
 <div id="layout-wrapper">
 
     <!-- ======== TOP BAR ======== -->
@@ -104,7 +105,7 @@
             <div class="container-fluid">
 
                 <!-- Breadcrumb -->
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-12">
                         <div class="page-title-box d-flex align-items-center justify-content-between">
                             <h4 class="mb-0">{{.Title}}</h4>
@@ -118,7 +119,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Page Content -->
                 {{embed}}
@@ -143,6 +144,8 @@
 
 <!-- Stub for app.js to prevent JS error -->
 <div id="sidebar-setting" style="display: none;"></div>
+<div class="topnav" style="display: none;"></div>
+<div class="ishorizontal-topbar" style="display: none;"></div>
 
 <!-- JAVASCRIPT CORE -->
 <script src="/static/libs/bootstrap/js/bootstrap.bundle.min.js"></script>

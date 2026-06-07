@@ -1,0 +1,76 @@
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Select Role</h4>
+            </div>
+            <div class="card-body">
+                <form action="/admin/permission/menu-role" method="GET">
+                    <div class="mb-3">
+                        <label class="form-label">Role</label>
+                        <select class="form-select" name="role_id" onchange="this.form.submit()">
+                            <option value="">-- Choose Role --</option>
+                            {{ range .Roles }}
+                            <option value="{{ .ID }}" {{ if eq $.RoleID .ID }}selected{{ end }}>{{ .Name }}</option>
+                            {{ end }}
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        {{ if .RoleID }}
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Set Menus</h4>
+            </div>
+            <div class="card-body">
+                <form action="/admin/permission/menu-role" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="role_id" value="{{ .RoleID }}">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th width="50">#</th>
+                                    <th>Menu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{ $activeMap := .ActiveMap }}
+                                {{ range .AllMenus }}
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="menu_codes" value="{{ .Code }}" {{ if index $activeMap .Code }}checked{{ end }}>
+                                    </td>
+                                    <td><strong>{{ .Name }}</strong></td>
+                                </tr>
+                                    {{ range .Children }}
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="menu_codes" value="{{ .Code }}" {{ if index $activeMap .Code }}checked{{ end }}>
+                                        </td>
+                                        <td style="padding-left: 30px;">- {{ .Name }}</td>
+                                    </tr>
+                                        {{ range .Children }}
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" name="menu_codes" value="{{ .Code }}" {{ if index $activeMap .Code }}checked{{ end }}>
+                                            </td>
+                                            <td style="padding-left: 60px;">-- {{ .Name }}</td>
+                                        </tr>
+                                        {{ end }}
+                                    {{ end }}
+                                {{ end }}
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3 waves-effect btn-label waves-light">
+                        <i class="bx bx-save label-icon"></i> Save Permissions
+                    </button>
+                </form>
+            </div>
+        </div>
+        {{ end }}
+    </div>
+</div>

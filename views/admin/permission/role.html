@@ -1,0 +1,67 @@
+{{define "styles"}}
+<link rel="stylesheet" href="/static/libs/gridjs/theme/mermaid.min.css">
+{{end}}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">Roles List</h4>
+            </div>
+            <div class="card-body">
+                <div id="table-roles"></div>
+                <!-- Hide the original table and let grid.js read it -->
+                <table id="raw-table-roles">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Role Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ range $i, $r := .Roles }}
+                        <tr>
+                            <td>{{ add $i 1 }}</td>
+                            <td>{{ $r.Name }}</td>
+                        </tr>
+                        {{ end }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">Add Role</h4>
+            </div>
+            <div class="card-body">
+                <form action="/admin/permission/role" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Role Name</label>
+                        <input type="text" class="form-control" name="name" required placeholder="Enter role name">
+                    </div>
+                    <button type="submit" class="btn btn-primary waves-effect btn-label waves-light">
+                        <i class="bx bx-save label-icon"></i> Save Role
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{define "scripts"}}
+<script src="/static/libs/gridjs/gridjs.umd.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (document.getElementById("raw-table-roles")) {
+            new gridjs.Grid({
+                from: document.getElementById("raw-table-roles"),
+                pagination: { limit: 5 },
+                sort: true,
+                search: true,
+            }).render(document.getElementById("table-roles"));
+        }
+    });
+</script>
+{{end}}
