@@ -10,6 +10,40 @@
     <link href="/static/css/icons.min.css" rel="stylesheet" type="text/css" />
     <link href="/static/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
     <link href="/static/libs/node-waves/waves.min.css" rel="stylesheet" type="text/css" />
+    
+    <!-- Custom Theme Colors -->
+    <style>
+        :root, [data-bs-theme="light"] {
+            --bs-primary: #F87242 !important;
+            --bs-primary-rgb: 248, 114, 66 !important;
+            --vz-primary: #F87242 !important;
+            --vz-primary-rgb: 248, 114, 66 !important;
+        }
+        
+        .btn-primary {
+            background-color: #F87242 !important;
+            border-color: #F87242 !important;
+        }
+        .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+            background-color: #e56538 !important;
+            border-color: #e56538 !important;
+        }
+        
+        .bg-primary {
+            background-color: #F87242 !important;
+        }
+        
+        .text-primary {
+            color: #F87242 !important;
+        }
+        
+        /* Gridjs specific overrides */
+        .gridjs-pagination .gridjs-pages button.gridjs-currentPage {
+            background-color: #F87242 !important;
+            border-color: #F87242 !important;
+        }
+    </style>
+
     {{block "styles" .}}{{end}}
 </head>
 
@@ -22,12 +56,12 @@
             <div class="d-flex">
                 <div class="navbar-brand-box">
                     <a href="/" class="logo logo-dark">
-                        <span class="logo-sm"><img src="/static/images/logo-dark-sm.png" alt="logo" height="26"></span>
-                        <span class="logo-lg"><img src="/static/images/logo-dark.png" alt="logo" height="28"></span>
+                        <span class="logo-sm"><img src="/static/images/glk-assets/gurulesku-icon.png" alt="logo" height="26"></span>
+                        <span class="logo-lg"><img src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png" alt="logo" height="28"></span>
                     </a>
                     <a href="/" class="logo logo-light">
-                        <span class="logo-lg"><img src="/static/images/logo-light.png" alt="logo" height="30"></span>
-                        <span class="logo-sm"><img src="/static/images/logo-light-sm.png" alt="logo" height="26"></span>
+                        <span class="logo-lg"><img src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png" alt="logo" height="30"></span>
+                        <span class="logo-sm"><img src="/static/images/glk-assets/gurulesku-icon.png" alt="logo" height="26"></span>
                     </a>
                 </div>
                 <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect vertical-menu-btn">
@@ -66,12 +100,12 @@
     <div class="vertical-menu">
         <div class="navbar-brand-box">
             <a href="/" class="logo logo-dark">
-                <span class="logo-sm"><img src="/static/images/logo-dark-sm.png" alt="" height="26"></span>
-                <span class="logo-lg"><img src="/static/images/logo-dark.png" alt="" height="28"></span>
+                <span class="logo-sm"><img src="/static/images/glk-assets/gurulesku-icon.png" alt="" height="26"></span>
+                <span class="logo-lg"><img src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png" alt="" height="70"></span>
             </a>
             <a href="/" class="logo logo-light">
-                <span class="logo-lg"><img src="/static/images/logo-light.png" alt="" height="30"></span>
-                <span class="logo-sm"><img src="/static/images/logo-light-sm.png" alt="" height="26"></span>
+                <span class="logo-lg"><img src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png" alt="" height="70"></span>
+                <span class="logo-sm"><img src="/static/images/glk-assets/gurulesku-icon.png" alt="" height="26"></span>
             </a>
         </div>
         <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect vertical-menu-btn">
