@@ -1,0 +1,50 @@
+{{ define "content" }}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Selamat Datang, {{ .Name }}!</h5>
+                <p class="text-muted">Ini adalah dashboard pelamar Anda. Pantau status lamaran di sini.</p>
+
+                <div class="table-responsive mt-4">
+                    <table class="table table-bordered mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Posisi</th>
+                                <th>Tanggal Lamar</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{ range $i, $app := .Applications }}
+                            <tr>
+                                <td>{{ add $i 1 }}</td>
+                                <td>{{ $app.Position }}</td>
+                                <td>{{ $app.CreatedAt.Format "02 Jan 2006" }}</td>
+                                <td>
+                                    {{ if eq $app.Status "accepted" }}
+                                    <span class="badge badge-soft-success">Diterima</span>
+                                    {{ else if eq $app.Status "rejected" }}
+                                    <span class="badge badge-soft-danger">Ditolak</span>
+                                    {{ else }}
+                                    <span class="badge badge-soft-warning">Dalam Proses</span>
+                                    {{ end }}
+                                </td>
+                            </tr>
+                            {{ else }}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">
+                                    Anda belum memiliki lamaran.
+                                    <a href="/apply" class="text-primary">Lamar sekarang</a>
+                                </td>
+                            </tr>
+                            {{ end }}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}

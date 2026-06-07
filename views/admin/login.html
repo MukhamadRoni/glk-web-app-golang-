@@ -1,0 +1,47 @@
+{{ define "content" }}
+<div class="text-center mt-2">
+    <h5>Welcome Back !</h5>
+    <p class="text-muted">Masuk ke panel Admin GLK.</p>
+</div>
+<div class="p-2 mt-4">
+    {{ if .Error }}
+    <div class="alert alert-danger" role="alert">{{ .Error }}</div>
+    {{ end }}
+
+    <form action="/admin/login" method="POST">
+
+        <div class="mb-3">
+            <label class="form-label" for="username">Username</label>
+            <div class="position-relative input-custom-icon">
+                <input type="text" class="form-control" id="username" name="username"
+                    placeholder="Masukkan username" required autofocus>
+                <span class="bx bx-user"></span>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="password-input">Password</label>
+            <div class="position-relative auth-pass-inputgroup input-custom-icon">
+                <span class="bx bx-lock-alt"></span>
+                <input type="password" class="form-control" id="password-input" name="password"
+                    placeholder="Masukkan password" required>
+                <button type="button" class="btn btn-link position-absolute h-100 end-0 top-0" id="password-addon">
+                    <i class="mdi mdi-eye-outline font-size-18 text-muted"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-check py-1">
+            <input type="checkbox" class="form-check-input" id="auth-remember-check" name="remember">
+            <label class="form-check-label" for="auth-remember-check">Ingat saya</label>
+        </div>
+
+        <div class="mt-3">
+            <button class="btn btn-primary w-100 waves-effect waves-light" type="submit" id="btn-login">
+                Log In
+            </button>
+        </div>
+
+    </form>
+</div>
+{{ end }}
