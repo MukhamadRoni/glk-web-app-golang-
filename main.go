@@ -26,11 +26,26 @@ func main() {
 		log.Println("[WARN] .env not found, falling back to system environment")
 	}
 
+	// Load admin menus from json
+	models.LoadMenu("config/menu.json")
+
 	// ── 2. Connect to database & auto-migrate models ──────────────────────
 	config.ConnectDB(
 		&models.Admin{},
 		&models.Pelamar{},
 	)
+
+	// Seed default admin user
+	var count int64
+	config.DB.Model(&models.Admin{}).Count(&count)
+	if count == 0 {
+		admin := &models.Admin{
+			Username: "admin",
+		}
+		admin.HashPassword("admin")
+		config.DB.Create(admin)
+		log.Println("[INFO] Seeded default admin user (admin/admin)")
+	}
 
 	// ── 3. Shared session store (in-memory; swap for Redis/DB in production) ─
 	sessionStore := session.New(session.Config{

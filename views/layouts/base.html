@@ -80,14 +80,17 @@
             <div id="sidebar-menu">
                 <ul class="metismenu list-unstyled" id="side-menu">
                     {{block "sidebar" .}}
-                    <!-- Default sidebar — override per-app -->
                     <li class="menu-title">Menu</li>
-                    <li>
-                        <a href="/dashboard">
-                            <i class="bx bx-home-alt icon nav-icon"></i>
-                            <span class="menu-item">Dashboard</span>
-                        </a>
-                    </li>
+                    {{ if .Menus }}
+                        {{ template "menu_recursive" .Menus }}
+                    {{ else }}
+                        <li>
+                            <a href="/dashboard">
+                                <i class="bx bx-home-alt icon nav-icon"></i>
+                                <span class="menu-item">Dashboard</span>
+                            </a>
+                        </li>
+                    {{ end }}
                     {{end}}
                 </ul>
             </div>
@@ -149,3 +152,24 @@
 {{block "scripts" .}}{{end}}
 </body>
 </html>
+
+{{ define "menu_recursive" }}
+    {{ range . }}
+    <li>
+        {{ if .Children }}
+        <a href="javascript: void(0);" class="has-arrow">
+            <i class="{{ .Icon }} icon nav-icon"></i>
+            <span class="menu-item" data-key="{{ .Code }}">{{ .Name }}</span>
+        </a>
+        <ul class="sub-menu" aria-expanded="false">
+            {{ template "menu_recursive" .Children }}
+        </ul>
+        {{ else }}
+        <a href="{{ .URL }}">
+            {{ if .Icon }}<i class="{{ .Icon }} icon nav-icon"></i>{{ end }}
+            <span class="menu-item" data-key="{{ .Code }}">{{ .Name }}</span>
+        </a>
+        {{ end }}
+    </li>
+    {{ end }}
+{{ end }}

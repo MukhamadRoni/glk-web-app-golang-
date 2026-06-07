@@ -1,0 +1,43 @@
+[
+    {
+        "code": "MNU_DASHBOARD",
+        "name": "Dashboard",
+        "url": "/admin/dashboard",
+        "icon": "bx bx-home-alt",
+        "children": []
+    },
+    {
+        "code": "MNU_MASTER",
+        "name": "Master",
+        "url": "#",
+        "icon": "bx bx-data",
+        "children": [
+            {
+                "code": "MNU_MASTER_LOKASI",
+                "name": "Master Lokasi",
+                "url": "/admin/master/lokasi",
+                "children": []
+            },
+            {
+                "code": "MNU_MASTER_MAPEL",
+                "name": "Master Mata Pelajaran",
+                "url": "#",
+                "children": [
+                    {
+                        "code": "MNU_MASTER_BANK_SOAL",
+                        "name": "Master Bank Soal",
+                        "url": "/admin/master/bank-soal",
+                        "children": []
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "code": "MNU_TRANSAKSI",
+        "name": "Transaksi",
+        "url": "/admin/transaksi",
+        "icon": "bx bx-cart",
+        "children": []
+    }
+]

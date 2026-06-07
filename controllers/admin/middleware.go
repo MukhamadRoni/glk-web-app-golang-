@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
+	"glk-web-app/models"
 )
 
 // store is the shared session store for the admin app.
@@ -48,6 +49,7 @@ func contextData(c *fiber.Ctx, extra fiber.Map) fiber.Map {
 	data := fiber.Map{
 		"Username":  c.Locals("admin_username"),
 		"Timestamp": time.Now(),
+        "Menus":     models.AdminMenus,
 	}
 	for k, v := range extra {
 		data[k] = v
