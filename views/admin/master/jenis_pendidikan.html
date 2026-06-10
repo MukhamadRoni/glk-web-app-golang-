@@ -1,0 +1,44 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title mb-0">Daftar Jenis Pendidikan</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-3">
+                            <input type="text" id="jpCode" class="form-control" placeholder="Kode (Contoh: SMA)" required>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <input type="text" id="jpName" class="form-control" placeholder="Nama Jenis Pendidikan (Contoh: Sekolah Menengah Atas)" required>
+                                <button class="btn btn-primary waves-effect btn-label waves-light" type="button" id="btnCreateJP">
+                                    <i class="bx bx-plus label-icon"></i> Tambah
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped" id="tableJP">
+                        <thead>
+                            <tr>
+                                <th width="50">#</th>
+                                <th width="150">Kode</th>
+                                <th>Nama Jenis Pendidikan</th>
+                                <th width="150">Status Aktif</th>
+                                <th width="100">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/jenis_pendidikan.js"></script>

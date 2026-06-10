@@ -31,7 +31,8 @@ func main() {
 		&models.Role{},
 		&models.RoleMenu{},
 		&models.Menu{},
-		&models.Wilayah{},
+		&models.Kota{},
+		&models.Kecamatan{},
 		&models.MataPelajaran{},
 		&models.BankSoal{},
 		&models.Admin{},
@@ -245,11 +246,42 @@ func newAdminApp() *fiber.App {
 	app.Post("/admin/login", adminCtrl.ProcessLogin)
 	app.Get("/admin/logout", adminCtrl.Logout)
 
+	api := app.Group("/api/v1", adminCtrl.APIAuthRequired)
+	
+	// API Wilayah (Kota & Kecamatan)
+	api.Get("/kota", adminCtrl.GetKotasList)
+	api.Post("/kota", adminCtrl.CreateKota)
+	api.Put("/kota/:id", adminCtrl.UpdateKota)
+	api.Delete("/kota/:id", adminCtrl.DeleteKota)
+	
+	api.Get("/kecamatan", adminCtrl.GetKecamatansList)
+	api.Post("/kecamatan", adminCtrl.CreateKecamatan)
+	api.Put("/kecamatan/:id", adminCtrl.UpdateKecamatan)
+	api.Delete("/kecamatan/:id", adminCtrl.DeleteKecamatan)
+
+	// API Mata Pelajaran (Raw SQL)
+	api.Get("/mapel", adminCtrl.GetMapelsList)
+	api.Post("/mapel", adminCtrl.CreateMapel)
+	api.Put("/mapel/:id", adminCtrl.UpdateMapel)
+	api.Patch("/mapel/:id/active", adminCtrl.UpdateMapelActive)
+	api.Delete("/mapel/:id", adminCtrl.DeleteMapel)
+
+	// API Jenis Pendidikan
+	api.Get("/jenis-pendidikan", adminCtrl.GetJenisPendidikanList)
+	api.Post("/jenis-pendidikan", adminCtrl.CreateJenisPendidikan)
+	api.Put("/jenis-pendidikan/:id", adminCtrl.UpdateJenisPendidikan)
+	api.Patch("/jenis-pendidikan/:id/active", adminCtrl.UpdateJenisPendidikanActive)
+	api.Delete("/jenis-pendidikan/:id", adminCtrl.DeleteJenisPendidikan)
+
 	// ── Protected Web Routes ─────────────────────────────────────────────
 	web := app.Group("/admin", adminCtrl.AuthRequired)
 	web.Get("/dashboard", adminCtrl.ShowDashboard)
 	web.Get("/applicants", adminCtrl.ShowApplicants)
 	web.Get("/applicants/:id", adminCtrl.ShowApplicant)
+	
+	web.Get("/recruitment/master/wilayah", adminCtrl.ShowWilayahPage)
+	web.Get("/recruitment/master/mapel", adminCtrl.ShowMapelPage)
+	web.Get("/recruitment/master/jenis-pendidikan", adminCtrl.ShowJenisPendidikanPage)
 
 	// Permission Routes
 	permission := web.Group("/permission")
@@ -261,7 +293,7 @@ func newAdminApp() *fiber.App {
 	permission.Post("/users", adminCtrl.ProcessUser)
 
 	// ── API v1 Routes (JSON, protected via APIAuthRequired) ──────────────
-	api := app.Group("/api/v1", adminCtrl.APIAuthRequired)
+	// ── API v1 Routes (JSON, protected via APIAuthRequired) ──────────────
 
 	// Applicants API
 	api.Get("/applicants", adminAPIv1.ListApplicants)

@@ -6,24 +6,48 @@ import (
 	"gorm.io/gorm"
 )
 
-// Wilayah represents region/area master data
-type Wilayah struct {
+// Kota represents City master data
+type Kota struct {
 	ID        uint           `gorm:"primarykey" json:"id"`
-	Code      string         `gorm:"size:50;uniqueIndex;not null" json:"code"`
 	Name      string         `gorm:"size:100;not null" json:"name"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
-// MataPelajaran represents subjects master data
-type MataPelajaran struct {
+// Kecamatan represents District master data
+type Kecamatan struct {
 	ID        uint           `gorm:"primarykey" json:"id"`
-	Code      string         `gorm:"size:50;uniqueIndex;not null" json:"code"`
+	KotaID    uint           `gorm:"index;not null" json:"kota_id"`
+	Kota      Kota           `gorm:"foreignKey:KotaID" json:"kota"`
 	Name      string         `gorm:"size:100;not null" json:"name"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+}
+
+// JenisPendidikan represents education types
+type JenisPendidikan struct {
+	ID              uint           `gorm:"primarykey" json:"id"`
+	JenisPendidikan string         `gorm:"size:50;not null" json:"jenis_pendidikan"`
+	Name            string         `gorm:"size:100;not null" json:"name"`
+	CreatedAt       time.Time      `json:"created_at"`
+	UpdatedAt       time.Time      `json:"updated_at"`
+	DeletedAt       gorm.DeletedAt `gorm:"index" json:"-"`
+	Active          string         `gorm:"size:1;default:'T'" json:"active"`
+}
+
+// MataPelajaran represents subjects master data
+type MataPelajaran struct {
+	ID                uint            `gorm:"primarykey" json:"id"`
+	JenisPendidikanID uint            `gorm:"index" json:"jenis_pendidikan_id"`
+	JenisPendidikan   JenisPendidikan `gorm:"foreignKey:JenisPendidikanID" json:"jenis_pendidikan"`
+	Code              string          `gorm:"size:50;uniqueIndex;not null" json:"code"`
+	Name              string          `gorm:"size:100;not null" json:"name"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+	Active    string         `gorm:"size:1;default:'T'" json:"active"`
 }
 
 // BankSoal represents a question bank item

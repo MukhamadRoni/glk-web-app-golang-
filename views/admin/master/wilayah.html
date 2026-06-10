@@ -1,0 +1,80 @@
+<div class="row">
+    <!-- Kota Table -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title mb-0">Daftar Kota</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <div class="input-group">
+                        <input type="text" id="kotaName" class="form-control" placeholder="Nama Kota Baru" required>
+                        <button class="btn btn-primary waves-effect btn-label waves-light" type="button" id="btnCreateKota">
+                            <i class="bx bx-plus label-icon"></i> Tambah Kota
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped" id="tableKota">
+                        <thead>
+                            <tr>
+                                <th width="50">#</th>
+                                <th>Nama Kota</th>
+                                <th width="100">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kecamatan Table -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title mb-0">Daftar Kecamatan</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <div class="row g-3">
+                        <div class="col-md-5">
+                            <select id="kecamatanKotaId" class="form-select" required>
+                                <option value="">-- Pilih Kota --</option>
+                                <!-- Populated via JS -->
+                            </select>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="input-group">
+                                <input type="text" id="kecamatanName" class="form-control" placeholder="Nama Kecamatan Baru" required>
+                                <button class="btn btn-primary waves-effect btn-label waves-light" type="button" id="btnCreateKecamatan">
+                                    <i class="bx bx-plus label-icon"></i> Tambah
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped" id="tableKecamatan">
+                        <thead>
+                            <tr>
+                                <th width="50">#</th>
+                                <th>Kota</th>
+                                <th>Kecamatan</th>
+                                <th width="100">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/wilayah.js"></script>
