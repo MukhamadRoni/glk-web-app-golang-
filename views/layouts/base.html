@@ -67,12 +67,12 @@
             <div class="d-flex">
                 <div class="navbar-brand-box">
                     <a href="/" class="logo logo-dark">
-                        <span class="logo-sm"><img src="/static/images/glk-assets/gurulesku-icon.png" alt="logo" height="26"></span>
-                        <span class="logo-lg"><img src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png" alt="logo" height="28"></span>
+                        <span class="logo-sm"><img src="/static/images/glk-assets/gurulesku-icon.png" alt="logo" height="30"></span>
+                        <span class="logo-lg"><img src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png" alt="logo" height="50"></span>
                     </a>
                     <a href="/" class="logo logo-light">
-                        <span class="logo-lg"><img src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png" alt="logo" height="30"></span>
-                        <span class="logo-sm"><img src="/static/images/glk-assets/gurulesku-icon.png" alt="logo" height="26"></span>
+                        <span class="logo-lg"><img src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png" alt="logo" height="50"></span>
+                        <span class="logo-sm"><img src="/static/images/glk-assets/gurulesku-icon.png" alt="logo" height="30"></span>
                     </a>
                 </div>
                 <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect vertical-menu-btn">
@@ -96,7 +96,7 @@
                         </div>
                         <div class="dropdown-divider"></div>
                         {{block "user_menu" .}}
-                        <a class="dropdown-item" href="/logout">
+                        <a class="dropdown-item" href="/admin/logout">
                             <i class="mdi mdi-logout text-muted font-size-16 align-middle me-2"></i>
                             <span class="align-middle">Logout</span>
                         </a>
@@ -111,12 +111,12 @@
     <div class="vertical-menu">
         <div class="navbar-brand-box">
             <a href="/" class="logo logo-dark">
-                <span class="logo-sm"><img src="/static/images/glk-assets/gurulesku-icon.png" alt="" height="26"></span>
-                <span class="logo-lg"><img src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png" alt="" height="70"></span>
+                <span class="logo-sm"><img src="/static/images/glk-assets/gurulesku-icon.png" alt="" height="30"></span>
+                <span class="logo-lg"><img src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png" alt="" height="50"></span>
             </a>
             <a href="/" class="logo logo-light">
-                <span class="logo-lg"><img src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png" alt="" height="70"></span>
-                <span class="logo-sm"><img src="/static/images/glk-assets/gurulesku-icon.png" alt="" height="26"></span>
+                <span class="logo-lg"><img src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png" alt="" height="50"></span>
+                <span class="logo-sm"><img src="/static/images/glk-assets/gurulesku-icon.png" alt="" height="30"></span>
             </a>
         </div>
         <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect vertical-menu-btn">
@@ -200,6 +200,38 @@
 <script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
 <script src="/static/libs/node-waves/waves.min.js"></script>
 <script src="/static/js/app.js"></script>
+
+<!-- Script to handle sidebar toggle saving and restoration safely -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Restore state AFTER app.js initializes MetisMenu
+        if (window.innerWidth >= 992) {
+            const size = localStorage.getItem('sidebar-size');
+            if (size === 'sm') {
+                document.body.setAttribute('data-sidebar-size', 'sm');
+                document.body.classList.add('sidebar-enable');
+            } else if (size === 'lg') {
+                document.body.setAttribute('data-sidebar-size', 'lg');
+                document.body.classList.remove('sidebar-enable');
+            }
+        }
+
+        // Save state on toggle
+        const toggleBtns = document.querySelectorAll('.vertical-menu-btn');
+        toggleBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                setTimeout(() => {
+                    if (window.innerWidth >= 992) {
+                        const size = document.body.getAttribute('data-sidebar-size');
+                        if (size) {
+                            localStorage.setItem('sidebar-size', size);
+                        }
+                    }
+                }, 100);
+            });
+        });
+    });
+</script>
 
 {{block "scripts" .}}{{end}}
 </body>

@@ -249,6 +249,7 @@
             const url = bankId ? `${API_BANK}/${bankId}` : API_BANK;
             const method = bankId ? "PUT" : "POST";
 
+            Swal.fire({ title: 'Mohon Tunggu', html: 'Sedang menyimpan data...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
             const res = await fetch(url, {
                 method: method,
                 headers: { "Content-Type": "application/json" },

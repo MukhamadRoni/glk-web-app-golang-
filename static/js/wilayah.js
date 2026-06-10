@@ -91,6 +91,7 @@
             }
 
             try {
+                Swal.fire({ title: 'Mohon Tunggu', html: 'Sedang memproses...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
                 const res = await fetch(API_KOTA, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -124,6 +125,7 @@
             }
 
             try {
+                Swal.fire({ title: 'Mohon Tunggu', html: 'Sedang memproses...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
                 const res = await fetch(API_KECAMATAN, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -160,6 +162,7 @@
             if (!confirm.isConfirmed) return;
 
             try {
+                Swal.fire({ title: 'Mohon Tunggu', html: 'Sedang memproses...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
                 const res = await fetch(`${API_KOTA}/${id}`, { 
                     method: "DELETE",
                     credentials: "same-origin"
@@ -194,6 +197,7 @@
             if (!confirm.isConfirmed) return;
 
             try {
+                Swal.fire({ title: 'Mohon Tunggu', html: 'Sedang memproses...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
                 const res = await fetch(`${API_KECAMATAN}/${id}`, { 
                     method: "DELETE",
                     credentials: "same-origin"
@@ -280,6 +284,7 @@
 
             if (formValues) {
                 try {
+                    Swal.fire({ title: 'Mohon Tunggu', html: 'Sedang memproses...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
                     const res = await fetch(`${API_KECAMATAN}/${id}`, {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },

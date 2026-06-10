@@ -48,3 +48,18 @@
         </div>
     </form>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const loginForm = document.querySelector('form[action="/admin/login"]');
+        const btnLogin = document.getElementById('btn-login');
+
+        if (loginForm) {
+            loginForm.addEventListener('submit', function() {
+                // Change button text to spinner and disable it
+                btnLogin.disabled = true;
+                btnLogin.innerHTML = '<i class="bx bx-loader bx-spin font-size-16 align-middle me-2"></i> Sedang memproses...';
+            });
+        }
+    });
+</script>

@@ -80,6 +80,7 @@
             const newStatus = e.target.checked ? "T" : "F";
             
             try {
+                Swal.fire({ title: 'Mohon Tunggu', html: 'Sedang memproses...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
                 const res = await fetch(`${API_MAPEL}/${id}/active`, {
                     method: "PATCH",
                     headers: { "Content-Type": "application/json" },
@@ -91,6 +92,8 @@
                     const errData = await res.json();
                     Swal.fire('Gagal', "Gagal mengubah status: " + (errData.message || errData.error || "Unknown Error"), 'error');
                     e.target.checked = !e.target.checked; // Revert visually
+                } else {
+                    Swal.close();
                 }
             } catch (error) {
                 console.error(error);
@@ -115,6 +118,7 @@
             }
 
             try {
+                Swal.fire({ title: 'Mohon Tunggu', html: 'Sedang memproses...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
                 const res = await fetch(API_MAPEL, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -153,6 +157,7 @@
             if (!confirm.isConfirmed) return;
 
             try {
+                Swal.fire({ title: 'Mohon Tunggu', html: 'Sedang memproses...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
                 const res = await fetch(`${API_MAPEL}/${id}`, { 
                     method: "DELETE",
                     credentials: "same-origin"
@@ -205,6 +210,7 @@
                 if (formValues.jpId === currentJpId && formValues.code === currentCode && formValues.name === currentName) return; // No changes
 
                 try {
+                    Swal.fire({ title: 'Mohon Tunggu', html: 'Sedang memproses...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
                     const res = await fetch(`${API_MAPEL}/${id}`, {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
