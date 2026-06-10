@@ -1,0 +1,35 @@
+{{define "styles"}}
+<style>
+    .authentication-bg {
+        background-image: url('/static/images/bg.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    .bg-overlay {
+        background-color: rgba(255, 255, 255, 0.4) !important;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+</style>
+{{end}}
+
+<div class="text-center mt-2">
+    <h5>Cek Email Anda</h5>
+    <p class="text-muted">Kami telah mengirimkan link ajaib (magic link) untuk masuk ke Portal Pelamar.</p>
+</div>
+
+<div class="p-2 mt-4 text-center">
+    <div class="avatar-lg mx-auto mb-4">
+        <div class="avatar-title bg-light text-primary display-4 rounded-circle">
+            <i class="bx bx-envelope"></i>
+        </div>
+    </div>
+    
+    <p class="font-size-15">Silakan periksa kotak masuk (atau spam) untuk email <strong>{{.Email}}</strong>. Klik tombol pada email tersebut untuk otomatis masuk.</p>
+    
+    <div class="mt-5">
+        <p>Tidak menerima email?</p>
+        <a href="/login" class="btn btn-outline-primary waves-effect waves-light mt-1">Coba Lagi</a>
+    </div>
+</div>

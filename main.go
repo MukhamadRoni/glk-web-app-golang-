@@ -129,15 +129,22 @@ func main() {
 		}
 	}
 
-	// ── 3. Shared session store (in-memory; swap for Redis/DB in production) ─
-	sessionStore := session.New(session.Config{
+	// ── 3. Session stores ────────────────────────────────────────────────
+	adminSessionStore := session.New(session.Config{
+		CookieName:     "admin_session",
+		Expiration:     24 * time.Hour,
+		CookieHTTPOnly: true,
+	})
+	
+	pelamarSessionStore := session.New(session.Config{
+		CookieName:     "pelamar_session",
 		Expiration:     24 * time.Hour,
 		CookieHTTPOnly: true,
 	})
 
-	// Inject session store into both controller packages
-	adminCtrl.InitStore(sessionStore)
-	pelamarCtrl.InitStore(sessionStore)
+	// Inject session stores
+	adminCtrl.InitStore(adminSessionStore)
+	pelamarCtrl.InitStore(pelamarSessionStore)
 
 	// ── 4. Start both servers concurrently ───────────────────────────────
 	var wg sync.WaitGroup
@@ -198,13 +205,21 @@ func newPelamarApp() *fiber.App {
 	app.Get("/", func(c *fiber.Ctx) error { return c.Redirect("/login") })
 	app.Get("/login", pelamarCtrl.ShowLogin)
 	app.Post("/login", pelamarCtrl.ProcessLogin)
-	app.Get("/register", pelamarCtrl.ShowRegister)
-	app.Post("/register", pelamarCtrl.ProcessRegister)
+	app.Get("/magic-link", pelamarCtrl.VerifyMagicLink)
 	app.Get("/logout", pelamarCtrl.Logout)
 
 	// ── Protected Routes (require pelamar session) ───────────────────────
 	protected := app.Group("/", pelamarCtrl.AuthRequired)
 	protected.Get("/dashboard", pelamarCtrl.ShowDashboard)
+	protected.Get("/apply", pelamarCtrl.ShowApply)
+	protected.Post("/apply", pelamarCtrl.ProcessApply)
+
+	// ── API Routes (require pelamar session) ─────────────────────────────
+	pelamarAPI := app.Group("/api/v1", pelamarCtrl.AuthRequired)
+	pelamarAPI.Get("/kota", adminCtrl.GetKotasList)
+	pelamarAPI.Get("/kecamatan", adminCtrl.GetKecamatansList)
+	pelamarAPI.Get("/jenis-pendidikan", adminCtrl.GetJenisPendidikanList)
+	pelamarAPI.Get("/mapel", adminCtrl.GetMapelsList)
 
 	// ── 404 Handler ──────────────────────────────────────────────────────
 	app.Use(func(c *fiber.Ctx) error {
