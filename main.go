@@ -21,9 +21,13 @@ import (
 )
 
 func main() {
-	// ── 1. Load environment variables ────────────────────────────────────
 	if err := godotenv.Load(); err != nil {
 		log.Println("[WARN] .env not found, falling back to system environment")
+	}
+	config.ConnectRedis()
+	
+	// Ensure the log directory exists
+	if err := os.MkdirAll("logs", 0755); err != nil {
 	}
 
 	// ── 2. Connect to database & auto-migrate models ──────────────────────
@@ -214,6 +218,13 @@ func newPelamarApp() *fiber.App {
 	protected.Get("/dashboard", pelamarCtrl.ShowDashboard)
 	protected.Get("/apply", pelamarCtrl.ShowApply)
 	protected.Post("/apply", pelamarCtrl.ProcessApply)
+	
+	// Test Akademik
+	protected.Get("/test/intro", pelamarCtrl.ShowTestIntro)
+	protected.Post("/test/start", pelamarCtrl.StartTest)
+	protected.Get("/test/soal", pelamarCtrl.ShowTestSoal)
+	protected.Post("/test/answer", pelamarCtrl.SaveAnswer)
+	protected.Post("/test/finish", pelamarCtrl.FinishTest)
 
 	// ── API Routes (require pelamar session) ─────────────────────────────
 	pelamarAPI := app.Group("/api/v1", pelamarCtrl.AuthRequired)

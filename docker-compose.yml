@@ -24,8 +24,12 @@ services:
       - DB_NAME=${DB_NAME:-glk_db}
       - DB_SSLMODE=disable
       - JWT_SECRET=${JWT_SECRET:-changeme_in_production}
+      - REDIS_HOST=redis:6379
+      - REDIS_PASSWORD=
     depends_on:
       db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     networks:
       - glk_network
@@ -53,11 +57,32 @@ services:
     networks:
       - glk_network
 
+  # --------------------------------------------------------
+  # Redis Service
+  # --------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: glk-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - glk_network
+
 # --------------------------------------------------------
 # Volumes
 # --------------------------------------------------------
 volumes:
   pgdata:
+    driver: local
+  redisdata:
     driver: local
 
 # --------------------------------------------------------

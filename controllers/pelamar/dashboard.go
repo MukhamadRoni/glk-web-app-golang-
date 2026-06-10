@@ -26,18 +26,30 @@ func ShowDashboard(c *fiber.Ctx) error {
 
 	hasApplied, lamaran, err := models.CheckIfPelamarHasApplied(config.DB, pelamarID)
 	
-	// Create an array to iterate over in the view, containing the single lamaran if exists
 	var applications []models.Lamaran
+	hasPendingTest := false
+
 	if err == nil && hasApplied && lamaran != nil {
 		applications = append(applications, *lamaran)
+
+		// Check if test exists for this lamaran
+		if lamaran.Status != "Selesai Tes" {
+			var count int64
+			config.DB.Model(&models.BankSoalA{}).Where("jenis_pendidikan_id = ? AND mata_pelajaran_id = ? AND active = 'T'", 
+				lamaran.TargetJenjangID, lamaran.TargetMapelID).Count(&count)
+			if count > 0 {
+				hasPendingTest = true
+			}
+		}
 	}
 
 	return c.Render("pelamar/dashboard", contextData(c, fiber.Map{
-		"Title":        "Dashboard Saya",
-		"Breadcrumb":   "Dashboard",
-		"Description":  "Pantau status lamaran Anda",
-		"Name":         pelamar.Name,
-		"Applications": applications,
+		"Title":          "Dashboard Saya",
+		"Breadcrumb":     "Dashboard",
+		"Description":    "Pantau status lamaran Anda",
+		"Name":           pelamar.Name,
+		"Applications":   applications,
+		"HasPendingTest": hasPendingTest,
 	}), "layouts/horizontal")
 }
 
@@ -171,6 +183,15 @@ func ProcessApply(c *fiber.Ctx) error {
 	if err := config.DB.Create(&lamaran).Error; err != nil {
 		log.Println("Database error:", err)
 		return c.Redirect("/apply?error=Failed to save data")
+	}
+
+	// Check if BankSoal exists
+	var count int64
+	config.DB.Model(&models.BankSoalA{}).Where("jenis_pendidikan_id = ? AND mata_pelajaran_id = ? AND active = 'T'", 
+		lamaran.TargetJenjangID, lamaran.TargetMapelID).Count(&count)
+	
+	if count > 0 {
+		return c.Redirect("/test/intro")
 	}
 
 	return c.Redirect("/dashboard?success=1")

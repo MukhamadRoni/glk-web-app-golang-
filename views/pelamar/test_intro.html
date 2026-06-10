@@ -1,0 +1,38 @@
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center text-primary mb-4">Tes Akademik</h4>
+                
+                <div class="alert alert-info bg-soft-info border-info">
+                    <strong>Informasi:</strong> Anda telah melamar untuk posisi <strong>Tutor {{ .BankSoal.MataPelajaran.Name }}</strong>. Silakan baca ketentuan tes di bawah ini sebelum memulai.
+                </div>
+
+                <div class="mt-4 text-muted">
+                    <p>Tes akademik merupakan salah satu tahap dalam proses seleksi tutor di LBB Gold Generation. Tujuan dari tes ini adalah untuk mengukur penguasaan materi ajar yang akan ditugaskan kepada calon tutor, serta memastikan kesiapan akademik dalam mendampingi siswa sesuai standar lembaga.</p>
+
+                    <h5 class="font-size-14 mt-4">Ruang lingkup tes akademik meliputi:</h5>
+                    <ul>
+                        <li>Penguasaan konsep dasar dan lanjutan sesuai jenjang dan mata pelajaran yang dilamar.</li>
+                        <li>Kemampuan menyelesaikan soal setara dengan materi siswa (biasanya berdasarkan kurikulum terbaru)</li>
+                    </ul>
+
+                    <h5 class="font-size-14 mt-4">Jenis tes yang digunakan:</h5>
+                    <p><strong>Tes Tertulis:</strong> Soal pilihan ganda dan/atau uraian sesuai bidang pelajaran.</p>
+
+                    <h5 class="font-size-14 mt-4">Durasi Tes:</h5>
+                    <p><strong>± {{ .BankSoal.DurasiPengerjaan }} menit</strong>, tergantung jenjang dan bidang yang dilamar.</p>
+
+                    <h5 class="font-size-14 mt-4 text-danger">Catatan:</h5>
+                    <p class="text-danger">Calon tutor diharapkan mengerjakan tes secara mandiri tanpa bantuan pihak lain, demi menjaga kualitas dan integritas proses seleksi.</p>
+                </div>
+
+                <form action="/test/start" method="POST" class="mt-4 text-center">
+                    <button type="submit" class="btn btn-primary btn-lg waves-effect waves-light w-100">
+                        <i class="bx bx-play-circle me-1"></i> Mulai Tes Sekarang
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

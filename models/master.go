@@ -58,6 +58,7 @@ type BankSoalA struct {
 	MataPelajaranID   uint            `gorm:"index" json:"mata_pelajaran_id"`
 	MataPelajaran     MataPelajaran   `gorm:"foreignKey:MataPelajaranID" json:"mata_pelajaran"`
 	Title             string          `gorm:"size:255;not null" json:"title"`
+	DurasiPengerjaan  int             `gorm:"default:20" json:"durasi_pengerjaan"` // Durasi dalam menit
 	Version           int             `gorm:"not null;default:1" json:"version"`
 	Active            string          `gorm:"size:1;default:'T'" json:"active"`
 	CreatedAt         time.Time       `json:"created_at"`
