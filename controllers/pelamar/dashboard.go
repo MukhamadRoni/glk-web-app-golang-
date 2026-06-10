@@ -128,7 +128,11 @@ func ProcessApply(c *fiber.Ctx) error {
 	}
 
 	// 3. Ambil data form
-	form, _ := c.MultipartForm()
+	form, err := c.MultipartForm()
+	if err != nil || form == nil {
+		log.Println("MultipartForm error:", err)
+		return c.Redirect("/apply?error=Invalid form data")
+	}
 	
 	kotaID, _ := strconv.Atoi(c.FormValue("kotaDomisili"))
 	kecamatanID, _ := strconv.Atoi(c.FormValue("kecamatanDomisili"))

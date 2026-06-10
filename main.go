@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"sync"
 	"time"
 
@@ -190,8 +191,9 @@ func newPelamarApp() *fiber.App {
 	})
 
 	app := fiber.New(fiber.Config{
-		AppName: "GLK Web Pelamar",
-		Views:   engine,
+		AppName:   "GLK Web Pelamar",
+		Views:     engine,
+		BodyLimit: 50 * 1024 * 1024, // 50 MB
 	})
 
 	// ── Global Middleware ────────────────────────────────────────────────
@@ -253,8 +255,9 @@ func newAdminApp() *fiber.App {
 	})
 
 	app := fiber.New(fiber.Config{
-		AppName: "GLK Web Admin",
-		Views:   engine,
+		AppName:   "GLK Web Admin",
+		Views:     engine,
+		BodyLimit: 50 * 1024 * 1024, // 50 MB
 	})
 
 	// ── Global Middleware ────────────────────────────────────────────────

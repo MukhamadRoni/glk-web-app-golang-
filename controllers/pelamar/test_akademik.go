@@ -1,7 +1,7 @@
 package pelamar
 
 import (
-	"context"
+	// "context"
 	"encoding/json"
 	"fmt"
 	"glk-web-app/config"
@@ -26,9 +26,9 @@ func ShowTestIntro(c *fiber.Ctx) error {
 
 	// Cari BankSoalA berdasarkan jenjang dan mapel lamaran
 	var bankSoal models.BankSoalA
-	err = config.DB.Where("jenis_pendidikan_id = ? AND mata_pelajaran_id = ? AND active = 'T'", 
+	err = config.DB.Where("jenis_pendidikan_id = ? AND mata_pelajaran_id = ? AND active = 'T'",
 		lamaran.TargetJenjangID, lamaran.TargetMapelID).First(&bankSoal).Error
-	
+
 	if err != nil {
 		// Jika tidak ada tes untuk posisi ini, anggap selesai
 		return c.Redirect("/dashboard")
@@ -59,7 +59,7 @@ func StartTest(c *fiber.Ctx) error {
 	}
 
 	var bankSoal models.BankSoalA
-	err = config.DB.Where("jenis_pendidikan_id = ? AND mata_pelajaran_id = ? AND active = 'T'", 
+	err = config.DB.Where("jenis_pendidikan_id = ? AND mata_pelajaran_id = ? AND active = 'T'",
 		lamaran.TargetJenjangID, lamaran.TargetMapelID).First(&bankSoal).Error
 	if err != nil {
 		return c.Redirect("/dashboard")
@@ -89,7 +89,7 @@ func ShowTestSoal(c *fiber.Ctx) error {
 	}
 
 	var bankSoal models.BankSoalA
-	err = config.DB.Preload("BankSoalBs.BankSoalCs").Where("jenis_pendidikan_id = ? AND mata_pelajaran_id = ? AND active = 'T'", 
+	err = config.DB.Preload("BankSoalBs.BankSoalCs").Where("jenis_pendidikan_id = ? AND mata_pelajaran_id = ? AND active = 'T'",
 		lamaran.TargetJenjangID, lamaran.TargetMapelID).First(&bankSoal).Error
 	if err != nil {
 		return c.Redirect("/dashboard")
@@ -162,7 +162,7 @@ func FinishTest(c *fiber.Ctx) error {
 	}
 
 	var bankSoal models.BankSoalA
-	err = config.DB.Preload("BankSoalBs.BankSoalCs").Where("jenis_pendidikan_id = ? AND mata_pelajaran_id = ? AND active = 'T'", 
+	err = config.DB.Preload("BankSoalBs.BankSoalCs").Where("jenis_pendidikan_id = ? AND mata_pelajaran_id = ? AND active = 'T'",
 		lamaran.TargetJenjangID, lamaran.TargetMapelID).First(&bankSoal).Error
 	if err != nil {
 		return c.Redirect("/dashboard")

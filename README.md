@@ -1,111 +1,65 @@
-# 🚀 GLK Web App (Mega Project)
+# GLK Web App (Golang)
 
-![Golang](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
-![Fiber](https://img.shields.io/badge/Fiber-20232A?style=for-the-badge&logo=gofiber&logoColor=00ADD8)
-![GORM](https://img.shields.io/badge/GORM-00ADD8?style=for-the-badge&logo=go&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
+Aplikasi Portal Rekrutmen Tutor LBB Gold Generation berbasis Golang (Fiber) dengan arsitektur microservices-lite (Dual Port) dan Database PostgreSQL. Aplikasi ini juga terintegrasi dengan Google Drive API via Apps Script dan Redis untuk manajemen _state_ tes akademik.
 
-**GLK Web App** adalah sistem berskala besar (*Mega Project*) berbasis **Golang Fiber** yang dirancang khusus untuk memfasilitasi kebutuhan manajemen internal dan publik secara terintegrasi. Sistem ini dibagi menjadi beberapa portal multi-tenant yang dapat berjalan secara konkuren (seperti Portal Admin dan Portal Pelamar).
+## 🌟 Ringkasan Fitur & Menu Saat Ini
 
----
+### 👨‍💻 Portal Pelamar (Web Pelamar - Port 8081)
+Aplikasi khusus untuk calon pelamar kerja.
+1. **Login & Autentikasi**
+   - Autentikasi menggunakan _Magic Link_ via Email (saat ini *bypass* langsung sukses untuk proses development).
+2. **Dashboard Status Lamaran (`/dashboard`)**
+   - Melihat histori aplikasi lamaran yang sudah dikirimkan beserta statusnya (Pending, Selesai Tes, Lulus, Ditolak, dll).
+   - Menampilkan notifikasi "Lanjutkan Tes" jika pelamar memiliki Tes Akademik yang tertunda.
+3. **Formulir Pendaftaran Guru (`/apply`)**
+   - Pengisian biodata, domisili, jenjang yang dilamar, dan jadwal kesediaan mengajar.
+   - Integrasi _Select2_ / _Choices.js_ yang terhubung ke _Master Data_ wilayah (Kota & Kecamatan) via API.
+   - Fitur *Upload CV & Transkrip Nilai* langsung ke Google Drive via konektor Google Apps Script.
+4. **Modul Tes Akademik (`/test/...`)**
+   - **Intro (`/test/intro`)**: Halaman peraturan dan instruksi tes akademik.
+   - **Ujian (`/test/soal`)**: Pengerjaan soal secara langsung. Menampilkan soal berdasarkan _Master Bank Soal_ (sesuai jenjang & mapel yang dilamar).
+   - Fitur *Autosave* jawaban secara _real-time_ menggunakan **Redis**.
+   - Fitur *Countdown Timer* cerdas yang otomatis mengumpulkan formulir jika waktu habis.
 
-## ✨ Fitur Utama
-
-- **🏗️ Multi-Portal Architecture**
-  Aplikasi menjalankan dua server terpisah dalam satu instansi *binary*:
-  - **Portal Pelamar** (Port `8081`) - Antarmuka publik.
-  - **Portal Admin** (Port `8082`) - *Backend management dashboard*.
-  
-- **🔐 Dynamic RBAC (Role-Based Access Control)**
-  - Otorisasi halaman dan menu secara terpusat.
-  - Opsi perizinan spesifik hingga ke *sub-menu* yang disimpan di dalam *Database* (Tidak lagi bergantung pada *hardcoded JSON*).
-  - Integrasi session lintas modular untuk perlindungan rute secara dinamis.
-
-- **🧩 Mega Project Modular Tree**
-  Semua menu dan sistem disiapkan untuk dapat beradaptasi dengan konsep *Mega Project*, dipisahkan atas modul-modul independen:
-  - 💼 **Recruitment**
-  - 🪪 **Admkar (Administrasi Karyawan)**
-  - 💰 **Payroll**
-  
-- **⚡ Advanced Rendering & UI**
-  - Menggunakan **Go HTML/Template** dengan fitur *Hot-Reload* (`Reload: true`).
-  - Dilengkapi antarmuka responsif berbasis Bootstrap 5.
-  - **Grid.js** digunakan untuk manajemen *Advance Tables* (Search, Sort, Pagination).
-
----
-
-## 🛠️ Tech Stack
-
-*   **Backend:** Go (Golang)
-*   **Web Framework:** [Fiber v2](https://gofiber.io/)
-*   **ORM:** [GORM](https://gorm.io/)
-*   **Database:** MySQL
-*   **Frontend UI:** Bootstrap 5, BoxIcons, Waves Effect, Grid.js
-*   **Environment Management:** Godotenv
+### 🛡️ Portal Admin (Web Admin - Port 8082)
+Aplikasi _Back-Office_ untuk pengelolaan sistem dan Master Data oleh tim HR/Admin.
+1. **Login Admin (`/admin/login`)**
+   - Autentikasi standar menggunakan Username/Email dan Password.
+2. **Dashboard HR (`/admin/dashboard`)**
+   - Menampilkan metrik utama sistem (meskipun saat ini masih statis/_placeholder_).
+3. **Data Pelamar (`/admin/applicants`)**
+   - *Data Tables* yang menampilkan daftar semua pelamar yang mendaftar.
+   - *Detail Pelamar*: Halaman profil detail untuk meninjau formulir pendaftaran, CV, Transkrip, jadwal luang, serta hasil tes pelamar.
+4. **Modul Master Data (`/admin/recruitment/master/...`)**
+   - **Master Wilayah (`/wilayah`)**: CRUD untuk tabel Kota dan Kecamatan di seluruh Indonesia.
+   - **Master Jenis Pendidikan (`/jenis-pendidikan`)**: CRUD untuk tingkat/jenjang ajar (TK, SD, SMP, SMA, dsb).
+   - **Master Mata Pelajaran (`/mapel`)**: CRUD untuk mengatur daftar bidang studi.
+   - **Master Bank Soal (`/bank-soal`)**: Manajemen soal ujian (A, B, C) untuk tes akademik. Mendukung tipe soal _Multiple Choice_ dan pembatasan _Durasi Pengerjaan_ ujian.
 
 ---
 
-## 🚀 Instalasi & Menjalankan Aplikasi
-
-Ikuti panduan berikut untuk menjalankan aplikasi di *environment* lokal Anda:
-
-### 1. Persiapan Database
-1. Pastikan layanan MySQL Anda telah berjalan.
-2. Buat database kosong bernama `glk_db` (atau sesuai konfigurasi di `.env`).
-
-### 2. Konfigurasi Environment (`.env`)
-Buat file `.env` di *root* proyek (atau gandakan dari `.env.example` jika ada) dan sesuaikan konfigurasi koneksi databasenya:
-```env
-DB_DSN=user:password@tcp(127.0.0.1:3306)/glk_db?charset=utf8mb4&parseTime=True&loc=Local
-PELAMAR_PORT=8081
-ADMIN_PORT=8082
-```
-
-### 3. Instalasi Dependensi
-Jalankan perintah berikut untuk mengunduh seluruh *package* Golang yang dibutuhkan:
-```bash
-go mod tidy
-```
-
-### 4. Jalankan Aplikasi
-Jalankan file utama `main.go`. Aplikasi otomatis akan melakukan **Auto-Migrate** tabel dan melakukan **Seeding** (pembuatan *Super Admin* dan stuktur Menu/Modul) ke database.
-```bash
-go run main.go
-```
-*Tunggu hingga terminal menampilkan informasi bahwa server berhasil berjalan di port `8081` dan `8082`.*
+## 🚀 Infrastruktur Pendukung
+- **Framework**: Go Fiber v2
+- **Database Utama**: PostgreSQL 16
+- **Caching & Session Data**: Redis 7
+- **UI Framework**: Bootstrap 5 + JQuery + MetisMenu (Template Skote)
+- **Containerization**: Docker & Docker Compose
 
 ---
 
-## 🔑 Default Akses (Seeder)
-Saat aplikasi pertama kali terhubung dengan database kosong, ia akan membuatkan akun default:
+## 📋 To-Do List (Pengembangan Selanjutnya)
 
-*   **URL Portal Admin:** `http://localhost:8082/admin/login`
-*   **Username:** `admin`
-*   **Password:** `admin`
-*   **Role:** `Super Admin` (Memiliki izin penuh ke seluruh modul)
+### Fitur Admin / HR
+- [ ] **Sistem Penilaian (Scoring)**: Mengubah perhitungan nilai ujian dari *raw output* di log menjadi *Grade* atau presentase yang tersimpan di kolom *Database* khusus agar HRD dapat melihat nilai langsung di Dashboard.
+- [ ] **Filter Data Pelamar**: Menambahkan filter canggih di halaman Data Pelamar (filter berdasarkan nilai tes, domisili, status).
+- [ ] **Email Integration Sebenarnya**: Mengembalikan fungsi _SMTP Mailer_ pada Login Pelamar dan memberitahukan hasil tes/undangan *interview* secara otomatis via Email.
+- [ ] **Manajemen Jadwal Wawancara**: Modul baru untuk HRD mengatur jadwal _interview_ offline/online bagi pelamar yang lulus tes akademik.
+- [ ] **Role Management**: Pembuatan sistem Hak Akses/Role Admin agar tidak semua admin dapat mengedit *Master Bank Soal*.
 
----
+### Fitur Pelamar
+- [ ] **Profile Page**: Halaman dimana pelamar bisa mengubah _password_ atau mengatur ulang *biodata dasar* mereka sebelum melamar.
+- [ ] **Lupa Akses Tes**: Pengecekan keamanan lebih ketat jika pelamar mencoba memintas (*bypass*) ujian atau *submit* berkali-kali ke server _Redis_.
 
-## 📂 Struktur Direktori Utama
-
-```text
-📁 glk-web-app
-├── 📁 config/           # Konfigurasi Database dan Environment
-├── 📁 controllers/      # Routing logic (Admin & Pelamar)
-├── 📁 models/           # Definisi GORM schema & Entities (Admin, Master, Menu, dll)
-├── 📁 static/           # Asset statis (CSS, JS, Images, Grid.js)
-├── 📁 views/            # File HTML Templates (Base Layout, Admin, Auth, dll)
-├── 📄 .env              # Environment Variables
-├── 📄 main.go           # Entry point aplikasi (Fiber init, Auto-Migrate, Seeder)
-└── 📄 README.md         # Dokumentasi Proyek
-```
-
----
-
-## 🎨 Modifikasi Tema
-Warna utama (*primary color*) dikendalikan via *CSS variables* yang dapat Anda temukan pada tag `<style>` di `views/layouts/base.html`. 
-Setelan saat ini adalah: `#F87242` (Oranye). Anda tidak perlu merekompilasi CSS bawaan (*app.min.css*) untuk mengubah warnanya.
-
----
-*Developed with ❤️ for Guru Lesku Mega Project.*
+### System & Architecture
+- [ ] **Clean Code & Refactoring**: Memisahkan fungsi-fungsi di *controller* ke *layer Service / Repository* agar file *controller* tidak terlalu besar (terutama pada `ProcessApply`).
+- [ ] **Production Ready**: Mematikan _Fiber Hot-Reload_ di environment `production` dan mempersiapkan *CI/CD pipeline*.

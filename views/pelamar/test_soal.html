@@ -60,106 +60,108 @@
     </div>
 </div>
 
-{{ define "scripts" }}
 <script>
-    // Load existing answers from server (Redis)
-    const rawAnswers = '{{ .Answers }}';
-    let existingAnswers = {};
-    if (rawAnswers) {
-        existingAnswers = JSON.parse(rawAnswers);
-    }
-
-    if (existingAnswers) {
-        for (const [qid, ansText] of Object.entries(existingAnswers)) {
-            // Find the radio button with this qid and value
-            const radios = document.querySelectorAll(`input[data-qid="${qid}"]`);
-            radios.forEach(r => {
-                if(r.value === ansText) {
-                    r.checked = true;
-                }
-            });
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load existing answers from server (Redis)
+        const rawAnswers = '{{ .Answers }}';
+        let existingAnswers = {};
+        if (rawAnswers) {
+            existingAnswers = JSON.parse(rawAnswers);
         }
-    }
 
-    // Auto-save via AJAX when answer changes
-    document.querySelectorAll('.answer-option').forEach(el => {
-        el.addEventListener('change', function() {
-            const qid = this.getAttribute('data-qid');
-            const ans = this.value;
+        if (existingAnswers) {
+            for (const [qid, ansText] of Object.entries(existingAnswers)) {
+                // Find the radio button with this qid and value
+                const radios = document.querySelectorAll(`input[data-qid="${qid}"]`);
+                radios.forEach(r => {
+                    if(r.value === ansText) {
+                        r.checked = true;
+                    }
+                });
+            }
+        }
 
-            fetch('/test/answer', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ question_id: parseInt(qid), answer: ans })
-            }).then(r => r.json()).then(data => {
-                if(data.error) {
-                    console.error('Failed to save answer:', data.error);
-                }
+        // Auto-save via AJAX when answer changes
+        document.querySelectorAll('.answer-option').forEach(el => {
+            el.addEventListener('change', function() {
+                const qid = this.getAttribute('data-qid');
+                const ans = this.value;
+
+                fetch('/test/answer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ question_id: parseInt(qid), answer: ans })
+                }).then(r => r.json()).then(data => {
+                    if(data.error) {
+                        console.error('Failed to save answer:', data.error);
+                    }
+                });
             });
         });
-    });
 
-    // Countdown Timer Logic
-    let remainingTime = {{ .Remaining }}; // in seconds
-    const timerDisplay = document.getElementById('countdown-timer');
+        // Countdown Timer Logic
+        let remainingTime = {{ .Remaining }}; // in seconds
+        const timerDisplay = document.getElementById('countdown-timer');
 
-    function updateTimer() {
-        if (remainingTime <= 0) {
-            timerDisplay.innerHTML = "00:00";
-            timerDisplay.classList.add('text-danger');
-            clearInterval(timerInterval);
+        let timerInterval;
+
+        function updateTimer() {
+            if (remainingTime <= 0) {
+                timerDisplay.innerHTML = "00:00";
+                timerDisplay.classList.add('text-danger');
+                if (timerInterval) clearInterval(timerInterval);
+                
+                // Auto submit
+                Swal.fire({
+                    title: 'Waktu Habis!',
+                    text: 'Jawaban Anda akan dikumpulkan secara otomatis.',
+                    icon: 'warning',
+                    showConfirmButton: false,
+                    timer: 3000
+                }).then(() => {
+                    document.getElementById('testForm').submit();
+                });
+                return;
+            }
+
+            const m = Math.floor(remainingTime / 60);
+            const s = remainingTime % 60;
+            timerDisplay.innerHTML = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
             
-            // Auto submit
-            Swal.fire({
-                title: 'Waktu Habis!',
-                text: 'Jawaban Anda akan dikumpulkan secara otomatis.',
-                icon: 'warning',
-                showConfirmButton: false,
-                timer: 3000
-            }).then(() => {
-                document.getElementById('testForm').submit();
-            });
-            return;
+            if (remainingTime < 300) { // last 5 minutes
+                timerDisplay.classList.add('text-danger');
+                timerDisplay.classList.add('animate__animated', 'animate__pulse', 'animate__infinite');
+            } else {
+                timerDisplay.classList.remove('text-danger');
+                timerDisplay.classList.add('text-primary');
+            }
+
+            remainingTime--;
         }
 
-        const m = Math.floor(remainingTime / 60);
-        const s = remainingTime % 60;
-        timerDisplay.innerHTML = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-        
-        if (remainingTime < 300) { // last 5 minutes
-            timerDisplay.classList.add('text-danger');
-            timerDisplay.classList.add('animate__animated', 'animate__pulse', 'animate__infinite');
-        } else {
-            timerDisplay.classList.remove('text-danger');
-            timerDisplay.classList.add('text-primary');
-        }
+        // Init
+        updateTimer();
+        timerInterval = setInterval(updateTimer, 1000);
 
-        remainingTime--;
-    }
-
-    // Init
-    updateTimer();
-    const timerInterval = setInterval(updateTimer, 1000);
-
-    // Confirm before submitting manually
-    document.getElementById('testForm').addEventListener('submit', function(e) {
-        if (remainingTime > 0) {
-            e.preventDefault();
-            Swal.fire({
-                title: 'Yakin ingin mengumpulkan?',
-                text: "Pastikan semua soal telah terjawab.",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, Kumpulkan',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    this.submit();
-                }
-            });
-        }
+        // Confirm before submitting manually
+        document.getElementById('testForm').addEventListener('submit', function(e) {
+            if (remainingTime > 0) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Yakin ingin mengumpulkan?',
+                    text: "Pastikan semua soal telah terjawab.",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Kumpulkan',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.submit();
+                    }
+                });
+            }
+        });
     });
 </script>
-{{ end }}
