@@ -50,15 +50,44 @@ type MataPelajaran struct {
 	Active    string         `gorm:"size:1;default:'T'" json:"active"`
 }
 
-// BankSoal represents a question bank item
-type BankSoal struct {
-	ID              uint           `gorm:"primarykey" json:"id"`
-	MataPelajaranID uint           `gorm:"index;not null" json:"mata_pelajaran_id"`
-	MataPelajaran   MataPelajaran  `gorm:"foreignKey:MataPelajaranID" json:"mata_pelajaran"`
-	Question        string         `gorm:"type:text;not null" json:"question"`
-	OptionsJSON     string         `gorm:"type:text;not null" json:"options_json"` // JSON array of options
-	CorrectAnswer   string         `gorm:"size:255;not null" json:"correct_answer"`
-	CreatedAt       time.Time      `json:"created_at"`
-	UpdatedAt       time.Time      `json:"updated_at"`
-	DeletedAt       gorm.DeletedAt `gorm:"index" json:"-"`
+// BankSoalA represents the header/version of the question bank
+type BankSoalA struct {
+	ID                uint            `gorm:"primarykey" json:"id"`
+	JenisPendidikanID uint            `gorm:"index" json:"jenis_pendidikan_id"`
+	JenisPendidikan   JenisPendidikan `gorm:"foreignKey:JenisPendidikanID" json:"jenis_pendidikan"`
+	MataPelajaranID   uint            `gorm:"index" json:"mata_pelajaran_id"`
+	MataPelajaran     MataPelajaran   `gorm:"foreignKey:MataPelajaranID" json:"mata_pelajaran"`
+	Title             string          `gorm:"size:255;not null" json:"title"`
+	Version           int             `gorm:"not null;default:1" json:"version"`
+	Active            string          `gorm:"size:1;default:'T'" json:"active"`
+	CreatedAt         time.Time       `json:"created_at"`
+	UpdatedAt         time.Time       `json:"updated_at"`
+	DeletedAt         gorm.DeletedAt  `gorm:"index" json:"-"`
+	BankSoalBs        []BankSoalB     `gorm:"foreignKey:BankSoalAID" json:"questions"`
+}
+
+// BankSoalB represents the questions
+type BankSoalB struct {
+	ID            uint           `gorm:"primarykey" json:"id"`
+	BankSoalAID   uint           `gorm:"index;not null" json:"bank_soal_a_id"`
+	QuestionType  string         `gorm:"size:50;not null" json:"question_type"` // e.g., 'MULTIPLE_CHOICE', 'ESSAY'
+	QuestionText  string         `gorm:"type:text;not null" json:"question_text"`
+	QuestionImage string         `gorm:"size:255" json:"question_image"`
+	OrderIndex    int            `gorm:"default:0" json:"order_index"`
+	CreatedAt     time.Time      `json:"created_at"`
+	UpdatedAt     time.Time      `json:"updated_at"`
+	DeletedAt     gorm.DeletedAt `gorm:"index" json:"-"`
+	BankSoalCs    []BankSoalC    `gorm:"foreignKey:BankSoalBID" json:"options"`
+}
+
+// BankSoalC represents the answers/options
+type BankSoalC struct {
+	ID            uint           `gorm:"primarykey" json:"id"`
+	BankSoalBID   uint           `gorm:"index;not null" json:"bank_soal_b_id"`
+	OptionText    string         `gorm:"type:text" json:"option_text"`
+	OptionImage   string         `gorm:"size:255" json:"option_image"`
+	IsCorrect     string         `gorm:"size:1;default:'F'" json:"is_correct"` // 'T' or 'F'
+	CreatedAt     time.Time      `json:"created_at"`
+	UpdatedAt     time.Time      `json:"updated_at"`
+	DeletedAt     gorm.DeletedAt `gorm:"index" json:"-"`
 }

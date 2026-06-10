@@ -10,6 +10,52 @@
     <link href="/static/css/icons.min.css" rel="stylesheet" type="text/css" />
     <link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
     <link href="/static/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+
+    <!-- Custom Theme Colors -->
+    <style>
+        :root, [data-bs-theme="light"] {
+            --bs-primary: #F87242 !important;
+            --bs-primary-rgb: 248, 114, 66 !important;
+            --vz-primary: #F87242 !important;
+            --vz-primary-rgb: 248, 114, 66 !important;
+        }
+        
+        .btn-primary {
+            background-color: #F87242 !important;
+            border-color: #F87242 !important;
+        }
+        .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+            background-color: #e56538 !important;
+            border-color: #e56538 !important;
+        }
+        
+        .swal2-styled.swal2-confirm {
+            background-color: #F87242;
+            border-color: #F87242;
+        }
+        .swal2-styled.swal2-confirm:hover {
+            background-color: #e56538;
+            border-color: #e56538;
+            background-image: none;
+        }
+        
+        .bg-primary {
+            background-color: #F87242 !important;
+        }
+        
+        .text-primary {
+            color: #F87242 !important;
+        }
+        
+        /* Gridjs specific overrides */
+        .gridjs-pagination .gridjs-pages button.gridjs-currentPage {
+            background-color: #F87242 !important;
+            border-color: #F87242 !important;
+        }
+    </style>
+
+    {{block "styles" .}}{{end}}
+
 </head>
 
 <body>
@@ -23,8 +69,8 @@
                     <!-- Logo -->
                     <div class="mb-4 pb-2">
                         <a href="/" class="d-block auth-logo">
-                            <img src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png" alt="logo" height="30" class="auth-logo-dark me-start">
-                            <img src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png" alt="logo" height="30" class="auth-logo-light me-start">
+                            <img src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png" alt="logo" height="60" class="auth-logo-dark me-start">
+                            <img src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png" alt="logo" height="60" class="auth-logo-light me-start">
                         </a>
                     </div>
 

@@ -77,7 +77,7 @@
     document.addEventListener("change", async function(e) {
         if (e.target.classList.contains("switch-active-mapel")) {
             const id = e.target.getAttribute("data-id");
-            const newStatus = e.target.checked ? "Y" : "F";
+            const newStatus = e.target.checked ? "T" : "F";
             
             try {
                 const res = await fetch(`${API_MAPEL}/${id}/active`, {

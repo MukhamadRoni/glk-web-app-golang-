@@ -34,7 +34,9 @@ func main() {
 		&models.Kota{},
 		&models.Kecamatan{},
 		&models.MataPelajaran{},
-		&models.BankSoal{},
+		&models.BankSoalA{},
+		&models.BankSoalB{},
+		&models.BankSoalC{},
 		&models.Admin{},
 		&models.Pelamar{},
 	)
@@ -81,7 +83,7 @@ func main() {
 		config.DB.Create(&models.Menu{Module: "Recruitment", ParentID: &recMaster.ID, Code: "MNU_REC_WILAYAH", Name: "Wilayah", URL: "/admin/recruitment/master/wilayah"})
 		config.DB.Create(&models.Menu{Module: "Recruitment", ParentID: &recMaster.ID, Code: "MNU_REC_BANK_SOAL", Name: "Bank Soal", URL: "/admin/recruitment/master/bank-soal"})
 		config.DB.Create(&models.Menu{Module: "Recruitment", ParentID: &recMaster.ID, Code: "MNU_REC_MAPEL", Name: "Mata Pelajaran", URL: "/admin/recruitment/master/mapel"})
-		
+
 		// Permission submenus for Recruitment
 		var recPerm models.Menu
 		config.DB.Where("code = ?", "MNU_REC_PERM").First(&recPerm)
@@ -103,7 +105,7 @@ func main() {
 	if roleCount == 0 {
 		role := models.Role{Name: "Super Admin"}
 		config.DB.Create(&role)
-		
+
 		// Grant all menus to Super Admin
 		var allMenus []models.Menu
 		config.DB.Find(&allMenus)
@@ -247,13 +249,13 @@ func newAdminApp() *fiber.App {
 	app.Get("/admin/logout", adminCtrl.Logout)
 
 	api := app.Group("/api/v1", adminCtrl.APIAuthRequired)
-	
+
 	// API Wilayah (Kota & Kecamatan)
 	api.Get("/kota", adminCtrl.GetKotasList)
 	api.Post("/kota", adminCtrl.CreateKota)
 	api.Put("/kota/:id", adminCtrl.UpdateKota)
 	api.Delete("/kota/:id", adminCtrl.DeleteKota)
-	
+
 	api.Get("/kecamatan", adminCtrl.GetKecamatansList)
 	api.Post("/kecamatan", adminCtrl.CreateKecamatan)
 	api.Put("/kecamatan/:id", adminCtrl.UpdateKecamatan)
@@ -273,15 +275,26 @@ func newAdminApp() *fiber.App {
 	api.Patch("/jenis-pendidikan/:id/active", adminCtrl.UpdateJenisPendidikanActive)
 	api.Delete("/jenis-pendidikan/:id", adminCtrl.DeleteJenisPendidikan)
 
+	// API Bank Soal
+	api.Get("/bank-soal", adminCtrl.GetBankSoalList)
+	api.Get("/bank-soal/:id", adminCtrl.GetBankSoalDetail)
+	api.Post("/bank-soal", adminCtrl.SaveBankSoal)
+	api.Put("/bank-soal/:id", adminCtrl.SaveBankSoal)
+	api.Patch("/bank-soal/:id/active", adminCtrl.UpdateBankSoalActive)
+	api.Delete("/bank-soal/:id", adminCtrl.DeleteBankSoal)
+
 	// ── Protected Web Routes ─────────────────────────────────────────────
 	web := app.Group("/admin", adminCtrl.AuthRequired)
 	web.Get("/dashboard", adminCtrl.ShowDashboard)
 	web.Get("/applicants", adminCtrl.ShowApplicants)
 	web.Get("/applicants/:id", adminCtrl.ShowApplicant)
-	
+
 	web.Get("/recruitment/master/wilayah", adminCtrl.ShowWilayahPage)
 	web.Get("/recruitment/master/mapel", adminCtrl.ShowMapelPage)
 	web.Get("/recruitment/master/jenis-pendidikan", adminCtrl.ShowJenisPendidikanPage)
+	web.Get("/recruitment/master/bank-soal", adminCtrl.ShowBankSoalPage)
+	web.Get("/recruitment/master/bank-soal/form", adminCtrl.ShowBankSoalFormPage)
+	web.Get("/recruitment/master/bank-soal/form/:id", adminCtrl.ShowBankSoalFormPage)
 
 	// Permission Routes
 	permission := web.Group("/permission")
