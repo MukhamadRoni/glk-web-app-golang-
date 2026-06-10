@@ -3,6 +3,15 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title mb-4">Formulir Pendaftaran Guru</h4>
+                
+                {{ if .HasApplied }}
+                <div class="alert alert-success mt-4" role="alert">
+                    <h4 class="alert-heading">Lamaran Berhasil Dikirim!</h4>
+                    <p>Terima kasih, <strong>{{ .Name }}</strong>. Anda telah berhasil mengirimkan form lamaran. Tim kami akan segera me-review lamaran Anda.</p>
+                    <hr>
+                    <p class="mb-0">Silakan pantau status lamaran Anda melalui halaman <a href="/dashboard" class="alert-link">Status Lamaran</a>.</p>
+                </div>
+                {{ else }}
                 <p class="text-muted">Pastikan data yang Anda isi sudah benar sebelum melakukan submit.</p>
 
                 <form action="/apply" method="POST" enctype="multipart/form-data" id="applyForm">
@@ -418,6 +427,7 @@
                         <button type="submit" class="btn btn-primary btn-lg waves-effect waves-light">Kirim Lamaran</button>
                     </div>
                 </form>
+                {{ end }}
             </div>
         </div>
     </div>

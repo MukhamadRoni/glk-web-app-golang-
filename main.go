@@ -39,6 +39,7 @@ func main() {
 		&models.BankSoalC{},
 		&models.Admin{},
 		&models.Pelamar{},
+		&models.Lamaran{},
 	)
 	// Seed Mega Project Menus
 	var menuCount int64

@@ -19,15 +19,15 @@
                             {{ range $i, $app := .Applications }}
                             <tr>
                                 <td>{{ add $i 1 }}</td>
-                                <td>{{ $app.Position }}</td>
+                                <td>Tutor {{ $app.TargetMapel.Name }} - {{ $app.TargetJenjang.Name }}</td>
                                 <td>{{ $app.CreatedAt.Format "02 Jan 2006" }}</td>
                                 <td>
-                                    {{ if eq $app.Status "accepted" }}
+                                    {{ if eq $app.Status "Diterima" }}
                                     <span class="badge badge-soft-success">Diterima</span>
-                                    {{ else if eq $app.Status "rejected" }}
+                                    {{ else if eq $app.Status "Ditolak" }}
                                     <span class="badge badge-soft-danger">Ditolak</span>
                                     {{ else }}
-                                    <span class="badge badge-soft-warning">Dalam Proses</span>
+                                    <span class="badge badge-soft-warning">{{ $app.Status }}</span>
                                     {{ end }}
                                 </td>
                             </tr>
