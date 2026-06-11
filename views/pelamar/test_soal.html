@@ -1,60 +1,234 @@
+<style>
+    .question-container {
+        display: none;
+    }
+    .question-container.active {
+        display: block;
+    }
+    .nav-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+        background-color: #fff;
+        transition: all 0.2s;
+        font-weight: bold;
+    }
+    .nav-btn:hover {
+        background-color: #f0f0f0;
+    }
+    .nav-btn.active {
+        background-color: #556ee6;
+        color: #fff;
+        border-color: #556ee6;
+    }
+    .nav-btn.answered {
+        background-color: #34c38f;
+        color: #fff;
+        border-color: #34c38f;
+    }
+    .nav-btn.answered.active {
+        background-color: #2cae7f;
+        box-shadow: 0 0 0 0.2rem rgba(52, 195, 143, 0.5);
+    }
+</style>
+
 <div class="row">
     <div class="col-md-9">
         <div class="card">
-            <div class="card-body">
-                <h4 class="card-title text-primary mb-4">{{ .BankSoal.Title }}</h4>
-                <hr>
+            <div
+                class="card-body"
+                style="min-height: 500px; display: flex; flex-direction: column"
+            >
+                <div
+                    class="d-flex justify-content-between align-items-center mb-4"
+                >
+                    <h4 class="card-title text-primary mb-0">
+                        {{ .BankSoal.Title }}
+                    </h4>
+                    <span
+                        class="badge bg-soft-info text-info p-2"
+                        id="current-question-label"
+                        >Soal 1 dari {{ len .BankSoal.BankSoalBs }}</span
+                    >
+                </div>
+                <hr />
 
-                <form id="testForm" action="/test/finish" method="POST">
+                <form
+                    id="testForm"
+                    action="/test/finish"
+                    method="POST"
+                    class="flex-grow-1"
+                >
                     {{ range $index, $question := .BankSoal.BankSoalBs }}
-                    <div class="mb-5 question-container" id="q_{{ $question.ID }}">
-                        <h5 class="font-size-15 mb-3">
-                            <span class="badge bg-soft-primary text-primary me-2">{{ add $index 1 }}.</span>
-                            {{ $question.QuestionText }}
+                    <div
+                        class="mb-5 question-container {{ if eq $index 0 }}active{{ end }}"
+                        id="q_container_{{ $index }}"
+                        data-index="{{ $index }}"
+                    >
+                        <h5 class="font-size-16 mb-4">
+                            <span class="text-primary fw-bold"
+                                >Pertanyaan {{ add $index 1 }}:</span
+                            ><br />
+                            <span class="mt-2 d-inline-block"
+                                >{{ $question.QuestionText }}</span
+                            >
                         </h5>
+
                         {{ if $question.QuestionImage }}
-                        <div class="mb-3">
-                            <img src="{{ $question.QuestionImage }}" alt="Question Image" class="img-fluid rounded" style="max-height: 200px;">
+                        <div class="mb-4">
+                            <img
+                                src="{{ $question.QuestionImage }}"
+                                alt="Question Image"
+                                class="img-fluid rounded border"
+                                style="max-height: 300px"
+                            />
                         </div>
                         {{ end }}
 
-                        <div class="options-list px-4">
+                        <div class="options-list px-3">
+                            {{ if eq $question.QuestionType "MULTIPLE_CHOICE" }}
                             {{ range $opt := $question.BankSoalCs }}
-                            <div class="form-check mb-2">
-                                <!-- Compare if this option was already selected in Redis -->
-                                <input class="form-check-input answer-option" type="radio" 
-                                    name="q_{{ $question.ID }}" 
-                                    id="opt_{{ $opt.ID }}" 
+                            <div
+                                class="form-check mb-3 p-2 border rounded border-light bg-light bg-opacity-10"
+                            >
+                                <input
+                                    class="form-check-input answer-option ms-1"
+                                    type="radio"
+                                    name="q_{{ $question.ID }}"
+                                    id="opt_{{ $opt.ID }}"
                                     value="{{ $opt.OptionText }}"
-                                    data-qid="{{ $question.ID }}">
-                                <label class="form-check-label" for="opt_{{ $opt.ID }}">
+                                    data-qid="{{ $question.ID }}"
+                                    data-index="{{ $index }}"
+                                />
+                                <label
+                                    class="form-check-label ms-2 w-100"
+                                    for="opt_{{ $opt.ID }}"
+                                    style="cursor: pointer"
+                                >
                                     {{ $opt.OptionText }}
                                 </label>
+                            </div>
+                            {{ end }} {{ else }}
+                            <div class="mb-3">
+                                <label class="form-label text-muted small"
+                                    >Jawaban Anda:</label
+                                >
+                                <textarea
+                                    class="form-control answer-text"
+                                    rows="8"
+                                    placeholder="Tuliskan jawaban lengkap Anda di sini..."
+                                    data-qid="{{ $question.ID }}"
+                                    data-index="{{ $index }}"
+                                    style="resize: none; border-radius: 8px"
+                                ></textarea>
+                                <div class="text-end mt-1">
+                                    <span class="text-muted small italic"
+                                        >Jawaban otomatis tersimpan saat Anda
+                                        berpindah soal.</span
+                                    >
+                                </div>
                             </div>
                             {{ end }}
                         </div>
                     </div>
                     {{ end }}
-
-                    <div class="text-end border-top pt-3">
-                        <button type="submit" class="btn btn-success btn-lg">Selesai & Kumpulkan</button>
-                    </div>
                 </form>
 
+                <div class="d-flex justify-content-between border-top pt-4">
+                    <button
+                        type="button"
+                        id="btn-prev"
+                        class="btn btn-outline-secondary btn-lg"
+                        disabled
+                    >
+                        <i class="bx bx-chevron-left me-1"></i> Sebelumnya
+                    </button>
+                    <div class="d-flex gap-2">
+                        <button
+                            type="button"
+                            id="btn-next"
+                            class="btn btn-primary btn-lg"
+                        >
+                            Selanjutnya <i class="bx bx-chevron-right ms-1"></i>
+                        </button>
+                        <button
+                            type="button"
+                            id="btn-submit-manual"
+                            class="btn btn-success btn-lg"
+                            style="display: none"
+                        >
+                            <i class="bx bx-check-double me-1"></i> Selesai &
+                            Kumpulkan
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Timer Sidebar -->
+    <!-- Sidebar -->
     <div class="col-md-3">
-        <div class="card" style="position: sticky; top: 100px;">
+        <!-- Timer Card -->
+        <div class="card mb-3">
             <div class="card-body text-center">
-                <h5 class="card-title mb-3">Sisa Waktu</h5>
-                <div id="countdown-timer" class="display-6 font-weight-bold text-danger">
+                <h5 class="card-title mb-3 text-muted">Sisa Waktu</h5>
+                <div
+                    id="countdown-timer"
+                    class="display-6 font-weight-bold text-danger"
+                >
                     --:--
                 </div>
-                <hr>
-                <p class="text-muted small mb-0">Ujian akan otomatis dikumpulkan jika waktu habis.</p>
+            </div>
+        </div>
+
+        <!-- Navigation Grid Card -->
+        <div class="card" style="position: sticky; top: 100px">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Navigasi Soal</h5>
+                <div
+                    class="d-flex flex-wrap gap-2 justify-content-start"
+                    id="question-nav-grid"
+                >
+                    {{ range $index, $question := .BankSoal.BankSoalBs }}
+                    <div
+                        class="nav-btn {{ if eq $index 0 }}active{{ end }}"
+                        data-index="{{ $index }}"
+                        id="nav_{{ $index }}"
+                    >
+                        {{ add $index 1 }}
+                    </div>
+                    {{ end }}
+                </div>
+
+                <hr class="my-4" />
+                <div class="small">
+                    <div class="d-flex align-items-center mb-2">
+                        <div
+                            class="nav-btn active me-2"
+                            style="width: 15px; height: 15px"
+                        ></div>
+                        <span>Sedang Dikerjakan</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-2">
+                        <div
+                            class="nav-btn answered me-2"
+                            style="width: 15px; height: 15px"
+                        ></div>
+                        <span>Sudah Dijawab</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div
+                            class="nav-btn me-2"
+                            style="width: 15px; height: 15px"
+                        ></div>
+                        <span>Belum Dijawab</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -62,6 +236,79 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        let currentIndex = 0;
+        const totalQuestions = {{ len .BankSoal.BankSoalBs }};
+        const containers = document.querySelectorAll('.question-container');
+        const navBtns = document.querySelectorAll('.nav-btn[data-index]');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const btnSubmitManual = document.getElementById('btn-submit-manual');
+        const currentLabel = document.getElementById('current-question-label');
+
+        function showQuestion(index) {
+            // Save current question if it's an essay to be safe
+            const currentTextarea = containers[currentIndex].querySelector('.answer-text');
+            if (currentTextarea) {
+                saveAnswer(currentTextarea.getAttribute('data-qid'), currentTextarea.value, currentIndex);
+            }
+
+            containers.forEach(c => c.classList.remove('active'));
+            navBtns.forEach(b => b.classList.remove('active'));
+
+            document.getElementById(`q_container_${index}`).classList.add('active');
+            document.getElementById(`nav_${index}`).classList.add('active');
+
+            currentIndex = index;
+            currentLabel.innerText = `Soal ${currentIndex + 1} dari ${totalQuestions}`;
+
+            // Update buttons
+            btnPrev.disabled = (currentIndex === 0);
+            if (currentIndex === totalQuestions - 1) {
+                btnNext.style.display = 'none';
+                btnSubmitManual.style.display = 'inline-block';
+            } else {
+                btnNext.style.display = 'inline-block';
+                btnSubmitManual.style.display = 'none';
+            }
+        }
+
+        btnPrev.addEventListener('click', () => {
+            if (currentIndex > 0) showQuestion(currentIndex - 1);
+        });
+
+        btnNext.addEventListener('click', () => {
+            if (currentIndex < totalQuestions - 1) showQuestion(currentIndex + 1);
+        });
+
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const idx = parseInt(this.getAttribute('data-index'));
+                if (!isNaN(idx)) showQuestion(idx);
+            });
+        });
+
+        // Consolidate Save Logic
+        function saveAnswer(qid, ans, idx) {
+            // Visual feedback in nav
+            if (ans && ans.trim() !== "") {
+                document.getElementById(`nav_${idx}`).classList.add('answered');
+            } else {
+                document.getElementById(`nav_${idx}`).classList.remove('answered');
+            }
+
+            fetch('/test/answer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ question_id: parseInt(qid), answer: ans })
+            }).then(r => r.json()).then(data => {
+                if(data.error) {
+                    console.error('Failed to save answer:', data.error);
+                }
+            });
+        }
+
         // Load existing answers from server (Redis)
         const rawAnswers = '{{ .Answers }}';
         let existingAnswers = {};
@@ -71,40 +318,54 @@
 
         if (existingAnswers) {
             for (const [qid, ansText] of Object.entries(existingAnswers)) {
-                // Find the radio button with this qid and value
+                // Radio buttons (Multiple Choice)
                 const radios = document.querySelectorAll(`input[data-qid="${qid}"]`);
                 radios.forEach(r => {
                     if(r.value === ansText) {
                         r.checked = true;
+                        const idx = r.getAttribute('data-index');
+                        document.getElementById(`nav_${idx}`).classList.add('answered');
+                    }
+                });
+
+                // Textareas (Essay)
+                const textareas = document.querySelectorAll(`textarea[data-qid="${qid}"]`);
+                textareas.forEach(t => {
+                    t.value = ansText;
+                    if (ansText && ansText.trim() !== "") {
+                        const idx = t.getAttribute('data-index');
+                        document.getElementById(`nav_${idx}`).classList.add('answered');
                     }
                 });
             }
         }
 
-        // Auto-save via AJAX when answer changes
+        // Auto-save for Multiple Choice
         document.querySelectorAll('.answer-option').forEach(el => {
             el.addEventListener('change', function() {
-                const qid = this.getAttribute('data-qid');
-                const ans = this.value;
+                saveAnswer(this.getAttribute('data-qid'), this.value, this.getAttribute('data-index'));
+            });
+        });
 
-                fetch('/test/answer', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ question_id: parseInt(qid), answer: ans })
-                }).then(r => r.json()).then(data => {
-                    if(data.error) {
-                        console.error('Failed to save answer:', data.error);
-                    }
-                });
+        // Auto-save for Essay (on blur and when switching)
+        document.querySelectorAll('.answer-text').forEach(el => {
+            el.addEventListener('blur', function() {
+                saveAnswer(this.getAttribute('data-qid'), this.value, this.getAttribute('data-index'));
+            });
+            // Also update nav status as user types (without saving yet for performance)
+            el.addEventListener('input', function() {
+                const idx = this.getAttribute('data-index');
+                if (this.value.trim() !== "") {
+                    document.getElementById(`nav_${idx}`).classList.add('answered');
+                } else {
+                    document.getElementById(`nav_${idx}`).classList.remove('answered');
+                }
             });
         });
 
         // Countdown Timer Logic
         let remainingTime = {{ .Remaining }}; // in seconds
         const timerDisplay = document.getElementById('countdown-timer');
-
         let timerInterval;
 
         function updateTimer() {
@@ -112,8 +373,7 @@
                 timerDisplay.innerHTML = "00:00";
                 timerDisplay.classList.add('text-danger');
                 if (timerInterval) clearInterval(timerInterval);
-                
-                // Auto submit
+
                 Swal.fire({
                     title: 'Waktu Habis!',
                     text: 'Jawaban Anda akan dikumpulkan secara otomatis.',
@@ -129,39 +389,39 @@
             const m = Math.floor(remainingTime / 60);
             const s = remainingTime % 60;
             timerDisplay.innerHTML = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-            
+
             if (remainingTime < 300) { // last 5 minutes
                 timerDisplay.classList.add('text-danger');
-                timerDisplay.classList.add('animate__animated', 'animate__pulse', 'animate__infinite');
             } else {
                 timerDisplay.classList.remove('text-danger');
                 timerDisplay.classList.add('text-primary');
             }
-
             remainingTime--;
         }
 
-        // Init
         updateTimer();
         timerInterval = setInterval(updateTimer, 1000);
 
-        // Confirm before submitting manually
-        document.getElementById('testForm').addEventListener('submit', function(e) {
-            if (remainingTime > 0) {
-                e.preventDefault();
-                Swal.fire({
-                    title: 'Yakin ingin mengumpulkan?',
-                    text: "Pastikan semua soal telah terjawab.",
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'Ya, Kumpulkan',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        this.submit();
-                    }
-                });
+        // Submit Logic
+        btnSubmitManual.addEventListener('click', function() {
+            // Save current question if it's an essay to be safe before submit
+            const currentTextarea = containers[currentIndex].querySelector('.answer-text');
+            if (currentTextarea) {
+                saveAnswer(currentTextarea.getAttribute('data-qid'), currentTextarea.value, currentIndex);
             }
+
+            Swal.fire({
+                title: 'Yakin ingin mengumpulkan?',
+                text: "Pastikan semua soal telah terjawab.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Kumpulkan',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('testForm').submit();
+                }
+            });
         });
     });
 </script>
