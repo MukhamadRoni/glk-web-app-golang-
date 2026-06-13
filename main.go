@@ -354,6 +354,7 @@ func newAdminApp() *fiber.App {
 	api.Get("/recruitment/pelamar", adminAPIv1.ListRecruitmentPelamar)
 	api.Get("/recruitment/pelamar/:id", adminAPIv1.GetRecruitmentPelamarDetail)
 	api.Patch("/recruitment/pelamar/:id/correction", adminAPIv1.UpdateRecruitmentCorrection)
+	api.Patch("/recruitment/pelamar/:id/status", adminAPIv1.UpdateRecruitmentStatus)
 
 	// Master Confidence Score API
 	api.Get("/confidence-score", adminCtrl.GetConfidenceScoreList)

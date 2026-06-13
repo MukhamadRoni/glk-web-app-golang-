@@ -235,3 +235,46 @@ func UpdateRecruitmentCorrection(c *fiber.Ctx) error {
 
 	return successResponse(c, fiber.Map{"id": id, "updated": true})
 }
+
+// -----------------------------------------------------------------------
+// PATCH /api/v1/recruitment/pelamar/:id/status
+// Body: { "status": "Diterima" | "Ditolak" | "Pending" }
+// Updates candidate status. If Ditolak, soft-deletes the pelamar record.
+// -----------------------------------------------------------------------
+func UpdateRecruitmentStatus(c *fiber.Ctx) error {
+	id, err := c.ParamsInt("id") // Lamaran ID
+	if err != nil {
+		return errorResponse(c, fiber.StatusBadRequest, "ID tidak valid")
+	}
+
+	type Body struct {
+		Status string `json:"status"`
+	}
+	var body Body
+	if err := c.BodyParser(&body); err != nil {
+		return errorResponse(c, fiber.StatusBadRequest, "Body tidak valid")
+	}
+
+	// 1. Fetch the application
+	var lamaran models.Lamaran
+	if err := config.DB.First(&lamaran, id).Error; err != nil {
+		return errorResponse(c, fiber.StatusNotFound, "Lamaran tidak ditemukan")
+	}
+
+	// 2. Update status in lamarans table
+	if err := config.DB.Model(&lamaran).Update("status", body.Status).Error; err != nil {
+		return errorResponse(c, fiber.StatusInternalServerError, "Gagal memperbarui status lamaran")
+	}
+
+	// 3. Special logic for Ditolak: Soft delete the pelamar record
+	if body.Status == "Ditolak" {
+		if err := config.DB.Delete(&models.Pelamar{}, lamaran.PelamarID).Error; err != nil {
+			return errorResponse(c, fiber.StatusInternalServerError, "Gagal menonaktifkan akun pelamar")
+		}
+	}
+
+	return successResponse(c, fiber.Map{
+		"id":     id,
+		"status": body.Status,
+	})
+}

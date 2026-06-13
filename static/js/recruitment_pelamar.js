@@ -152,6 +152,26 @@ document.addEventListener("DOMContentLoaded", function () {
   async function showDetail(id) {
     biodataContent.innerHTML = `<div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div></div>`;
     tesContent.innerHTML = `<div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div></div>`;
+
+    // Reset and Add Action Buttons to Modal Header
+    const existingButtons = document.querySelectorAll(".modal-status-btn");
+    existingButtons.forEach((btn) => btn.remove());
+
+    const modalHeader = document.querySelector(
+      "#modalDetailPelamar .modal-header",
+    );
+    const btnContainer = document.createElement("div");
+    btnContainer.className = "d-flex gap-2 ms-auto me-3 modal-status-btn";
+    btnContainer.innerHTML = `
+        <button class="btn btn-sm btn-outline-success" onclick="updateStatus(${id}, 'Diterima')">Set Diterima</button>
+        <button class="btn btn-sm btn-outline-warning" onclick="updateStatus(${id}, 'Pending')">Set Pending</button>
+        <button class="btn btn-sm btn-outline-danger" onclick="updateStatus(${id}, 'Ditolak')">Set Ditolak</button>
+    `;
+    modalHeader.insertBefore(
+      btnContainer,
+      modalHeader.querySelector(".btn-close"),
+    );
+
     if (modalDetail) modalDetail.show();
 
     try {
@@ -511,6 +531,56 @@ document.addEventListener("DOMContentLoaded", function () {
       Swal.fire("Error", "Terjadi kesalahan jaringan.", "error");
     }
   }
+
+  // Global Function for Status Update
+  window.updateStatus = async function (id, status) {
+    const confirm = await Swal.fire({
+      title: `Set status ke ${status}?`,
+      text:
+        status === "Ditolak"
+          ? "Akun pelamar akan dinonaktifkan (Soft Delete)."
+          : "",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Ya, Lanjutkan",
+    });
+
+    if (confirm.isConfirmed) {
+      try {
+        Swal.fire({
+          title: "Memproses...",
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+        const res = await fetch(`${API_RECRUITMENT_PELAMAR}/${id}/status`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: status }),
+        });
+        const json = await res.json();
+        if (json.success) {
+          Swal.fire(
+            "Berhasil",
+            `Status diperbarui ke ${status}`,
+            "success",
+          ).then(() => {
+            if (typeof grid !== "undefined" && grid) {
+              grid.forceRender();
+            } else {
+              location.reload(); // Fallback for dashboard
+            }
+          });
+        } else {
+          Swal.fire("Gagal", json.message, "error");
+        }
+      } catch (error) {
+        console.error(error);
+        Swal.fire("Error", "Terjadi kesalahan jaringan.", "error");
+      }
+    }
+  };
 
   if (document.getElementById("table-recruitment-pelamar")) {
     initGrid();
