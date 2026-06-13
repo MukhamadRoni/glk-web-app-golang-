@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
     const API_MAPEL = "/api/v1/mapel";
     const API_JP = "/api/v1/jenis-pendidikan";
     const tbodyMapel = document.querySelector("#tableMapel tbody");
@@ -40,33 +40,45 @@
 
             if (json.data && json.data.length > 0) {
                 json.data.forEach((m, index) => {
-                    const isChecked = m.active === 'Y' ? 'checked' : '';
+                    const isChecked = m.active === 'Y' || m.active === 'T' ? 'checked' : '';
                     const jpName = m.jenis_pendidikan_name ? m.jenis_pendidikan_name : '<span class="text-muted fst-italic">Belum Diatur</span>';
                     const jpId = m.jenis_pendidikan_id ? m.jenis_pendidikan_id : '';
+                    const requirements = m.requirements ? m.requirements : '<span class="text-muted small italic">Tidak ada persyaratan khusus</span>';
+                    
                     tbodyMapel.innerHTML += `
                         <tr>
                             <td>${index + 1}</td>
-                            <td>${jpName}</td>
-                            <td><span class="badge bg-secondary">${m.code}</span></td>
-                            <td>${m.name}</td>
+                            <td><span class="badge bg-soft-primary text-primary">${jpName}</span></td>
+                            <td><code class="text-dark fw-bold">${m.code}</code></td>
+                            <td><span class="fw-medium">${m.name}</span></td>
+                            <td><small>${requirements}</small></td>
                             <td>
-                                <div class="form-check form-switch form-switch-md mb-3" dir="ltr">
+                                <div class="form-check form-switch form-switch-md" dir="ltr">
                                     <input type="checkbox" class="form-check-input switch-active-mapel" data-id="${m.id}" ${isChecked}>
+                                    <label class="form-check-label small ms-1">${m.active === 'T' || m.active === 'Y' ? 'Aktif' : 'Non-aktif'}</label>
                                 </div>
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-info waves-effect waves-light btn-edit-mapel" data-id="${m.id}" data-jp-id="${jpId}" data-code="${m.code}" data-name="${m.name}" title="Edit">
-                                    <i class="bx bx-pencil"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger waves-effect waves-light btn-delete-mapel" data-id="${m.id}" title="Hapus">
-                                    <i class="bx bx-trash"></i>
-                                </button>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-soft-info waves-effect waves-light btn-edit-mapel" 
+                                        data-id="${m.id}" 
+                                        data-jp-id="${jpId}" 
+                                        data-code="${m.code}" 
+                                        data-name="${m.name}" 
+                                        data-req="${m.requirements || ''}"
+                                        title="Edit">
+                                        <i class="bx bx-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-soft-danger waves-effect waves-light btn-delete-mapel" data-id="${m.id}" title="Hapus">
+                                        <i class="bx bx-trash"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     `;
                 });
             } else {
-                tbodyMapel.innerHTML = `<tr><td colspan="5" class="text-center">Belum ada data Mata Pelajaran</td></tr>`;
+                tbodyMapel.innerHTML = `<tr><td colspan="7" class="text-center">Belum ada data Mata Pelajaran</td></tr>`;
             }
         } catch (error) {
             console.error("Error loading mapel:", error);
@@ -93,6 +105,7 @@
                     Swal.fire('Gagal', "Gagal mengubah status: " + (errData.message || errData.error || "Unknown Error"), 'error');
                     e.target.checked = !e.target.checked; // Revert visually
                 } else {
+                    await loadMapel();
                     Swal.close();
                 }
             } catch (error) {
@@ -112,6 +125,8 @@
             const jpId = document.getElementById("mapelJenisPendidikan").value;
             const code = document.getElementById("mapelCode").value;
             const name = document.getElementById("mapelName").value;
+            const requirements = document.getElementById("mapelRequirements").value;
+
             if (!jpId || !code || !name) {
                 Swal.fire('Peringatan', 'Jenis Pendidikan, Kode, dan Nama wajib diisi!', 'warning');
                 return;
@@ -123,11 +138,17 @@
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "same-origin",
-                    body: JSON.stringify({ jenis_pendidikan_id: parseInt(jpId), code: code, name: name })
+                    body: JSON.stringify({ 
+                        jenis_pendidikan_id: parseInt(jpId), 
+                        code: code, 
+                        name: name,
+                        requirements: requirements
+                    })
                 });
                 if (res.ok) {
                     document.getElementById("mapelCode").value = "";
                     document.getElementById("mapelName").value = "";
+                    document.getElementById("mapelRequirements").value = "";
                     await loadMapel();
                     Swal.fire('Berhasil', 'Berhasil menambahkan mata pelajaran!', 'success');
                 } else {
@@ -181,6 +202,7 @@
             const currentJpId = btnEditMapel.getAttribute('data-jp-id');
             const currentCode = btnEditMapel.getAttribute('data-code');
             const currentName = btnEditMapel.getAttribute('data-name');
+            const currentReq = btnEditMapel.getAttribute('data-req');
             
             const jpOptions = Array.from(selectJP.options)
                 .filter(opt => opt.value !== "")
@@ -190,32 +212,43 @@
             const { value: formValues } = await Swal.fire({
                 title: 'Edit Mata Pelajaran',
                 html:
-                    `<select id="swal-mapelJp" class="swal2-select" style="display: flex; margin: 10px auto; width: 80%;">${jpOptions}</select>` +
-                    `<input id="swal-mapelCode" class="swal2-input" placeholder="Kode" value="${currentCode}">` +
-                    `<input id="swal-mapelName" class="swal2-input" placeholder="Nama" value="${currentName}">`,
+                    `<div class="text-start">` +
+                    `<label class="form-label small fw-bold">Jenis Pendidikan</label>` +
+                    `<select id="swal-mapelJp" class="form-select mb-3">${jpOptions}</select>` +
+                    `<label class="form-label small fw-bold">Kode</label>` +
+                    `<input id="swal-mapelCode" class="form-control mb-3" placeholder="Kode" value="${currentCode}">` +
+                    `<label class="form-label small fw-bold">Nama Mata Pelajaran</label>` +
+                    `<input id="swal-mapelName" class="form-control mb-3" placeholder="Nama" value="${currentName}">` +
+                    `<label class="form-label small fw-bold">Requirements</label>` +
+                    `<textarea id="swal-mapelReq" class="form-control mb-3" placeholder="Requirements" rows="3">${currentReq}</textarea>` +
+                    `</div>`,
                 focusConfirm: false,
                 showCancelButton: true,
                 preConfirm: () => {
                     const jpId = document.getElementById('swal-mapelJp').value;
                     const code = document.getElementById('swal-mapelCode').value;
                     const name = document.getElementById('swal-mapelName').value;
+                    const req = document.getElementById('swal-mapelReq').value;
                     if (!jpId || !code || !name) {
-                        Swal.showValidationMessage('Semua kolom wajib diisi!');
+                        Swal.showValidationMessage('Jenis Pendidikan, Kode, dan Nama wajib diisi!');
                     }
-                    return { jpId, code, name };
+                    return { jpId, code, name, req };
                 }
             });
 
             if (formValues) {
-                if (formValues.jpId === currentJpId && formValues.code === currentCode && formValues.name === currentName) return; // No changes
-
                 try {
                     Swal.fire({ title: 'Mohon Tunggu', html: 'Sedang memproses...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
                     const res = await fetch(`${API_MAPEL}/${id}`, {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
                         credentials: "same-origin",
-                        body: JSON.stringify({ jenis_pendidikan_id: parseInt(formValues.jpId), code: formValues.code, name: formValues.name })
+                        body: JSON.stringify({ 
+                            jenis_pendidikan_id: parseInt(formValues.jpId), 
+                            code: formValues.code, 
+                            name: formValues.name,
+                            requirements: formValues.req
+                        })
                     });
                     if (res.ok) {
                         await loadMapel();

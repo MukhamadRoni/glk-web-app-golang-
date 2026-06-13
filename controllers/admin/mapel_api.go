@@ -14,6 +14,7 @@ type MapelResponse struct {
 	ID                  uint      `json:"id"`
 	Code                string    `json:"code"`
 	Name                string    `json:"name"`
+	Requirements        string    `json:"requirements"`
 	JenisPendidikanID   *uint     `json:"jenis_pendidikan_id"`
 	JenisPendidikanName *string   `json:"jenis_pendidikan_name"`
 	Active              string    `json:"active"`
@@ -26,10 +27,10 @@ func GetMapelsList(c *fiber.Ctx) error {
 	var mapels []MapelResponse
 	// Fetching active and inactive records, avoiding soft-deleted ones
 	err := config.DB.Raw(`
-		SELECT m.id, m.code, m.name, m.jenis_pendidikan_id, j.name AS jenis_pendidikan_name, 
-		       m.created_at, m.updated_at, m.active 
-		FROM mata_pelajarans m 
-		LEFT JOIN jenis_pendidikans j ON m.jenis_pendidikan_id = j.id 
+		SELECT m.id, m.code, m.name, m.requirements, m.jenis_pendidikan_id, j.name AS jenis_pendidikan_name,
+		       m.created_at, m.updated_at, m.active
+		FROM mata_pelajarans m
+		LEFT JOIN jenis_pendidikans j ON m.jenis_pendidikan_id = j.id
 		WHERE m.deleted_at IS NULL
 	`).Scan(&mapels).Error
 	if err != nil {
@@ -44,6 +45,7 @@ func CreateMapel(c *fiber.Ctx) error {
 		JenisPendidikanID uint   `json:"jenis_pendidikan_id"`
 		Code              string `json:"code"`
 		Name              string `json:"name"`
+		Requirements      string `json:"requirements"`
 	}
 	if err := c.BodyParser(&payload); err != nil {
 		return c.Status(400).JSON(fiber.Map{"error": "Invalid JSON"})
@@ -54,8 +56,8 @@ func CreateMapel(c *fiber.Ctx) error {
 	}
 
 	now := time.Now()
-	err := config.DB.Exec("INSERT INTO mata_pelajarans (jenis_pendidikan_id, code, name, created_at, updated_at, active) VALUES (?, ?, ?, ?, ?, 'T')",
-		payload.JenisPendidikanID, payload.Code, payload.Name, now, now).Error
+	err := config.DB.Exec("INSERT INTO mata_pelajarans (jenis_pendidikan_id, code, name, requirements, created_at, updated_at, active) VALUES (?, ?, ?, ?, ?, ?, 'T')",
+		payload.JenisPendidikanID, payload.Code, payload.Name, payload.Requirements, now, now).Error
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}
@@ -70,6 +72,7 @@ func UpdateMapel(c *fiber.Ctx) error {
 		JenisPendidikanID uint   `json:"jenis_pendidikan_id"`
 		Code              string `json:"code"`
 		Name              string `json:"name"`
+		Requirements      string `json:"requirements"`
 	}
 	if err := c.BodyParser(&payload); err != nil {
 		return c.Status(400).JSON(fiber.Map{"error": "Invalid JSON"})
@@ -80,8 +83,8 @@ func UpdateMapel(c *fiber.Ctx) error {
 	}
 
 	now := time.Now()
-	err := config.DB.Exec("UPDATE mata_pelajarans SET jenis_pendidikan_id = ?, code = ?, name = ?, updated_at = ? WHERE id = ? AND deleted_at IS NULL",
-		payload.JenisPendidikanID, payload.Code, payload.Name, now, id).Error
+	err := config.DB.Exec("UPDATE mata_pelajarans SET jenis_pendidikan_id = ?, code = ?, name = ?, requirements = ?, updated_at = ? WHERE id = ? AND deleted_at IS NULL",
+		payload.JenisPendidikanID, payload.Code, payload.Name, payload.Requirements, now, id).Error
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}

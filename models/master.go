@@ -44,10 +44,11 @@ type MataPelajaran struct {
 	JenisPendidikan   JenisPendidikan `gorm:"foreignKey:JenisPendidikanID" json:"jenis_pendidikan"`
 	Code              string          `gorm:"size:50;uniqueIndex;not null" json:"code"`
 	Name              string          `gorm:"size:100;not null" json:"name"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
-	Active    string         `gorm:"size:1;default:'T'" json:"active"`
+	Requirements      string          `gorm:"type:text" json:"requirements"`
+	CreatedAt         time.Time       `json:"created_at"`
+	UpdatedAt         time.Time       `json:"updated_at"`
+	DeletedAt         gorm.DeletedAt  `gorm:"index" json:"-"`
+	Active            string          `gorm:"size:1;default:'T'" json:"active"`
 }
 
 // BankSoalA represents the header/version of the question bank
