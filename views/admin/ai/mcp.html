@@ -1,0 +1,159 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-primary text-white border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 me-3">
+                        <div class="avatar-md">
+                            <span
+                                class="avatar-title bg-white-50 rounded-circle font-size-24 text-white"
+                            >
+                                <i class="bx bx-bot"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h4 class="text-white mb-2">
+                            Apa itu AI Master Context Provider (MCP)?
+                        </h4>
+                        <p class="mb-0 opacity-75 font-size-15">
+                            AI Master Context Provider (MCP) adalah modul pusat
+                            pengetahuan yang berfungsi untuk memberikan konteks
+                            mendalam mengenai profil, kebijakan, dan operasional
+                            perusahaan kepada sistem Kecerdasan Buatan (AI).
+                            Dengan mendaftarkan dokumen perusahaan ke dalam MCP,
+                            AI akan mampu memberikan jawaban yang akurat,
+                            relevan, dan sesuai dengan standar internal
+                            perusahaan saat berinteraksi dengan pengguna atau
+                            dalam proses analisis data.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div
+                class="card-header d-flex justify-content-between align-items-center"
+            >
+                <h4 class="card-title mb-0">Daftar Konteks Perusahaan (MCP)</h4>
+                <button class="btn btn-sm btn-primary" id="btnAddMCP">
+                    <i class="bx bx-plus"></i> Tambah Konteks Baru
+                </button>
+            </div>
+            <div class="card-body">
+                <div id="table-mcp"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal CRUD MCP -->
+<div
+    class="modal fade"
+    id="modalMCP"
+    tabindex="-1"
+    aria-labelledby="modalMCPLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalMCPLabel">Manajemen MCP</h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <form id="formMCP">
+                <div class="modal-body">
+                    <input type="hidden" id="mcpID" />
+                    <div class="mb-3">
+                        <label class="form-label"
+                            >Nama Perusahaan / Divisi</label
+                        >
+                        <input
+                            type="text"
+                            id="mcpName"
+                            class="form-control"
+                            placeholder="Contoh: PT. Gurulesku Indonesia"
+                            required
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"
+                            >Keterangan / Pengenalan</label
+                        >
+                        <textarea
+                            id="mcpKeterangan"
+                            class="form-control"
+                            rows="4"
+                            placeholder="Jelaskan secara singkat mengenai konteks perusahaan ini..."
+                            required
+                        ></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"
+                            >Upload Dokumen Konteks (PDF/Docx/JSON)</label
+                        >
+                        <input
+                            type="file"
+                            id="mcpFile"
+                            class="form-control"
+                            accept=".pdf,.doc,.docx,.json"
+                        />
+                        <div class="form-text text-info">
+                            File akan diunggah otomatis ke Google Drive
+                            perusahaan.
+                        </div>
+                    </div>
+                    <div class="mb-3" id="urlDisplay" style="display: none">
+                        <label class="form-label">URL Dokumen Saat Ini</label>
+                        <div class="input-group">
+                            <input
+                                type="text"
+                                id="mcpURL"
+                                class="form-control"
+                                readonly
+                            />
+                            <a
+                                href="#"
+                                id="btnViewFile"
+                                target="_blank"
+                                class="btn btn-outline-info"
+                                >Lihat File</a
+                            >
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Batal
+                    </button>
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        id="btnSubmitMCP"
+                    >
+                        Simpan Data
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Grid.js Styles -->
+<link rel="stylesheet" href="/static/libs/gridjs/theme/mermaid.min.css" />
+
+<!-- Grid.js JS -->
+<script src="/static/libs/gridjs/gridjs.umd.js"></script>
+
+<!-- Custom JS -->
+<script src="/static/js/ai_mcp.js"></script>

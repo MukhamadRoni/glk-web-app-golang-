@@ -105,3 +105,14 @@ type ConfidenceScore struct {
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 }
+
+// CompanyMCP represents the master context provider data for AI
+type CompanyMCP struct {
+	ID         uint           `gorm:"primarykey" json:"id"`
+	Name       string         `gorm:"size:255;not null" json:"name"`
+	Keterangan string         `gorm:"type:text" json:"keterangan"`
+	URL        string         `gorm:"size:500" json:"url"`
+	CreatedAt  time.Time      `json:"created_at"`
+	UpdatedAt  time.Time      `json:"updated_at"`
+	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"`
+}

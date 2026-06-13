@@ -46,6 +46,7 @@ func main() {
 		&models.Pelamar{},
 		&models.Lamaran{},
 		&models.ConfidenceScore{},
+		&models.CompanyMCP{},
 	)
 	// Seed Mega Project Menus
 	var menuCount int64
@@ -328,6 +329,7 @@ func newAdminApp() *fiber.App {
 	web.Get("/recruitment/master/bank-soal/form", adminCtrl.ShowBankSoalFormPage)
 	web.Get("/recruitment/master/bank-soal/form/:id", adminCtrl.ShowBankSoalFormPage)
 	web.Get("/recruitment/master/confidence-score", adminCtrl.ShowConfidenceScorePage)
+	web.Get("/ai/mcp", adminCtrl.ShowMCPPage)
 
 	// Recruitment Transactions
 	web.Get("/recruitment/transaksi/pelamar", adminCtrl.ShowRecruitmentPelamar)
@@ -361,6 +363,13 @@ func newAdminApp() *fiber.App {
 	api.Post("/confidence-score", adminCtrl.CreateConfidenceScore)
 	api.Put("/confidence-score/:id", adminCtrl.UpdateConfidenceScore)
 	api.Delete("/confidence-score/:id", adminCtrl.DeleteConfidenceScore)
+
+	// AI MCP API
+	api.Get("/ai/mcp", adminCtrl.GetMCPList)
+	api.Post("/ai/mcp", adminCtrl.CreateMCP)
+	api.Put("/ai/mcp/:id", adminCtrl.UpdateMCP)
+	api.Delete("/ai/mcp/:id", adminCtrl.DeleteMCP)
+	api.Post("/ai/mcp/upload-proxy", adminCtrl.UploadMCPProxy)
 
 	// ── 404 Handler ──────────────────────────────────────────────────────
 	app.Use(func(c *fiber.Ctx) error {
