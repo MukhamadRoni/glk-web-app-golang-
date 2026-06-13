@@ -116,3 +116,14 @@ type CompanyMCP struct {
 	UpdatedAt  time.Time      `json:"updated_at"`
 	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"`
 }
+
+// AIProfilingSkill represents skill sets (usually .md files) for AI analysis
+type AIProfilingSkill struct {
+	ID         uint           `gorm:"primarykey" json:"id"`
+	Name       string         `gorm:"size:255;not null" json:"name"`
+	Keterangan string         `gorm:"type:text" json:"keterangan"`
+	URL        string         `gorm:"size:500" json:"url"`
+	CreatedAt  time.Time      `json:"created_at"`
+	UpdatedAt  time.Time      `json:"updated_at"`
+	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"`
+}

@@ -1,0 +1,85 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-info text-white border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 me-3">
+                        <div class="avatar-md">
+                            <span class="avatar-title bg-white-50 rounded-circle font-size-24 text-white">
+                                <i class="bx bx-list-check"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h4 class="text-white mb-2">Apa itu AI Profiling Skills?</h4>
+                        <p class="mb-0 opacity-75 font-size-15">
+                            AI Profiling Skills adalah modul untuk mengelola daftar keahlian (skills) dan kriteria penilaian dalam format Markdown (.md). Dokumen ini digunakan oleh AI sebagai panduan standar untuk menganalisis dan melakukan profiling terhadap CV atau hasil tes kandidat. Dengan mengunggah panduan skill yang spesifik (misal: skill HR untuk Guru Bahasa Inggris), AI dapat memberikan penilaian yang lebih objektif dan sesuai dengan ekspektasi rekrutmen.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title mb-0">Daftar Skill Profiling (AI)</h4>
+                <button class="btn btn-sm btn-info text-white" id="btnAddSkill">
+                    <i class="bx bx-plus"></i> Tambah Skill Baru
+                </button>
+            </div>
+            <div class="card-body">
+                <div id="table-profiling"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal CRUD Profiling -->
+<div class="modal fade" id="modalProfiling" tabindex="-1" aria-labelledby="modalProfilingLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalProfilingLabel">Manajemen Profiling Skill</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formProfiling">
+                <div class="modal-body">
+                    <input type="hidden" id="skillID">
+                    <div class="mb-3">
+                        <label class="form-label">Nama Skill / Kategori</label>
+                        <input type="text" id="skillName" class="form-control" placeholder="Contoh: HR-teacher-skills-english" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Keterangan / Tujuan Profiling</label>
+                        <textarea id="skillKeterangan" class="form-control" rows="4" placeholder="Jelaskan skill yang dibutuhkan untuk menganalisa kandidat..." required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Upload Panduan Skill (.md)</label>
+                        <input type="file" id="skillFile" class="form-control" accept=".md">
+                        <div class="form-text text-info">Unggah file format Markdown (.md) yang berisi kriteria penilaian.</div>
+                    </div>
+                    <div class="mb-3" id="urlDisplaySkill" style="display: none;">
+                        <label class="form-label">URL Dokumen Saat Ini</label>
+                        <div class="input-group">
+                            <input type="text" id="skillURL" class="form-control" readonly>
+                            <a href="#" id="btnViewSkillFile" target="_blank" class="btn btn-outline-info">Lihat File</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-info text-white" id="btnSubmitSkill">Simpan Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Grid.js Styles -->
+<link rel="stylesheet" href="/static/libs/gridjs/theme/mermaid.min.css">
+
+<!-- Grid.js JS -->
+<script src="/static/libs/gridjs/gridjs.umd.js"></script>
+
+<!-- Custom JS -->
+<script src="/static/js/ai_profiling.js"></script>

@@ -47,6 +47,7 @@ func main() {
 		&models.Lamaran{},
 		&models.ConfidenceScore{},
 		&models.CompanyMCP{},
+		&models.AIProfilingSkill{},
 	)
 	// Seed Mega Project Menus
 	var menuCount int64
@@ -330,6 +331,7 @@ func newAdminApp() *fiber.App {
 	web.Get("/recruitment/master/bank-soal/form/:id", adminCtrl.ShowBankSoalFormPage)
 	web.Get("/recruitment/master/confidence-score", adminCtrl.ShowConfidenceScorePage)
 	web.Get("/ai/mcp", adminCtrl.ShowMCPPage)
+	web.Get("/ai/profiling", adminCtrl.ShowProfilingPage)
 
 	// Recruitment Transactions
 	web.Get("/recruitment/transaksi/pelamar", adminCtrl.ShowRecruitmentPelamar)
@@ -370,6 +372,13 @@ func newAdminApp() *fiber.App {
 	api.Put("/ai/mcp/:id", adminCtrl.UpdateMCP)
 	api.Delete("/ai/mcp/:id", adminCtrl.DeleteMCP)
 	api.Post("/ai/mcp/upload-proxy", adminCtrl.UploadMCPProxy)
+
+	// AI Profiling API
+	api.Get("/ai/profiling", adminCtrl.GetProfilingList)
+	api.Post("/ai/profiling", adminCtrl.CreateProfiling)
+	api.Put("/ai/profiling/:id", adminCtrl.UpdateProfiling)
+	api.Delete("/ai/profiling/:id", adminCtrl.DeleteProfiling)
+	api.Post("/ai/profiling/upload-proxy", adminCtrl.UploadProfilingProxy)
 
 	// ── 404 Handler ──────────────────────────────────────────────────────
 	app.Use(func(c *fiber.Ctx) error {
