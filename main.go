@@ -26,7 +26,7 @@ func main() {
 		log.Println("[WARN] .env not found, falling back to system environment")
 	}
 	config.ConnectRedis()
-	
+
 	// Ensure the log directory exists
 	if err := os.MkdirAll("logs", 0755); err != nil {
 	}
@@ -141,7 +141,7 @@ func main() {
 		Expiration:     24 * time.Hour,
 		CookieHTTPOnly: true,
 	})
-	
+
 	pelamarSessionStore := session.New(session.Config{
 		CookieName:     "pelamar_session",
 		Expiration:     24 * time.Hour,
@@ -220,7 +220,7 @@ func newPelamarApp() *fiber.App {
 	protected.Get("/dashboard", pelamarCtrl.ShowDashboard)
 	protected.Get("/apply", pelamarCtrl.ShowApply)
 	protected.Post("/apply", pelamarCtrl.ProcessApply)
-	
+
 	// Test Akademik
 	protected.Get("/test/intro", pelamarCtrl.ShowTestIntro)
 	protected.Post("/test/start", pelamarCtrl.StartTest)
@@ -326,6 +326,9 @@ func newAdminApp() *fiber.App {
 	web.Get("/recruitment/master/bank-soal/form", adminCtrl.ShowBankSoalFormPage)
 	web.Get("/recruitment/master/bank-soal/form/:id", adminCtrl.ShowBankSoalFormPage)
 
+	// Recruitment Transactions
+	web.Get("/recruitment/transaksi/pelamar", adminCtrl.ShowRecruitmentPelamar)
+
 	// Permission Routes
 	permission := web.Group("/permission")
 	permission.Get("/role", adminCtrl.ShowRoles)
@@ -343,6 +346,11 @@ func newAdminApp() *fiber.App {
 	api.Get("/applicants/:id", adminAPIv1.GetApplicant)
 	api.Patch("/applicants/:id/status", adminAPIv1.UpdateApplicantStatus)
 	api.Delete("/applicants/:id", adminAPIv1.DeleteApplicant)
+
+	// Recruitment Transactions API
+	api.Get("/recruitment/pelamar", adminAPIv1.ListRecruitmentPelamar)
+	api.Get("/recruitment/pelamar/:id", adminAPIv1.GetRecruitmentPelamarDetail)
+	api.Patch("/recruitment/pelamar/:id/correction", adminAPIv1.UpdateRecruitmentCorrection)
 
 	// ── 404 Handler ──────────────────────────────────────────────────────
 	app.Use(func(c *fiber.Ctx) error {

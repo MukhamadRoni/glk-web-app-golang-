@@ -22,7 +22,8 @@ type GDriveUploadResponse struct {
 }
 
 // UploadToGDrive reads a multipart.FileHeader and uploads it to Google Drive via Apps Script.
-func UploadToGDrive(fileHeader *multipart.FileHeader) (string, error) {
+// customName is an optional filename (without extension).
+func UploadToGDrive(fileHeader *multipart.FileHeader, customName string) (string, error) {
 	// Ambil URL Apps Script dari .env
 	gasURL := config.GetEnv("GAS_UPLOAD_URL", "")
 	if gasURL == "" {
@@ -57,9 +58,14 @@ func UploadToGDrive(fileHeader *multipart.FileHeader) (string, error) {
 		ext = ".file" // Fallback
 	}
 
+	finalFilename := fileHeader.Filename
+	if customName != "" {
+		finalFilename = customName + ext
+	}
+
 	// Buat payload JSON
 	payload := map[string]string{
-		"filename": fileHeader.Filename,
+		"filename": finalFilename,
 		"fileData": base64Data,
 		"mimeType": mimeType,
 	}

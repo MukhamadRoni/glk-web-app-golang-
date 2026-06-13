@@ -3,93 +3,220 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title mb-4">Formulir Pendaftaran Guru</h4>
-                
+
                 {{ if .HasApplied }}
                 <div class="alert alert-success mt-4" role="alert">
                     <h4 class="alert-heading">Lamaran Berhasil Dikirim!</h4>
-                    <p>Terima kasih, <strong>{{ .Name }}</strong>. Anda telah berhasil mengirimkan form lamaran. Tim kami akan segera me-review lamaran Anda.</p>
-                    <hr>
-                    <p class="mb-0">Silakan pantau status lamaran Anda melalui halaman <a href="/dashboard" class="alert-link">Status Lamaran</a>.</p>
+                    <p>
+                        Terima kasih, <strong>{{ .Name }}</strong>. Anda telah
+                        berhasil mengirimkan form lamaran. Tim kami akan segera
+                        me-review lamaran Anda.
+                    </p>
+                    <hr />
+                    <p class="mb-0">
+                        Silakan pantau status lamaran Anda melalui halaman
+                        <a href="/dashboard" class="alert-link"
+                            >Status Lamaran</a
+                        >.
+                    </p>
                 </div>
                 {{ else }}
-                <p class="text-muted">Pastikan data yang Anda isi sudah benar sebelum melakukan submit.</p>
+                <p class="text-muted">
+                    Pastikan data yang Anda isi sudah benar sebelum melakukan
+                    submit.
+                </p>
 
-                <form action="/apply" method="POST" enctype="multipart/form-data" id="applyForm">
-                    
+                <form
+                    action="/apply"
+                    method="POST"
+                    enctype="multipart/form-data"
+                    id="applyForm"
+                >
                     <!-- 1. Informasi Pribadi -->
-                    <h5 class="font-size-14 mb-3 border-bottom pb-2">Informasi Pribadi</h5>
+                    <h5 class="font-size-14 mb-3 border-bottom pb-2">
+                        Informasi Pribadi
+                    </h5>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="namaLengkap">Nama Lengkap <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="namaLengkap" name="namaLengkap" value="{{ .Name }}" required>
+                                <label class="form-label" for="namaLengkap"
+                                    >Nama Lengkap
+                                    <span class="text-danger">*</span></label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="namaLengkap"
+                                    name="namaLengkap"
+                                    value="{{ .Name }}"
+                                    required
+                                />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="email">Email <span class="text-danger">*</span></label>
-                                <input type="email" class="form-control" id="email" name="email" value="{{ .Email }}" readonly>
+                                <label class="form-label" for="email"
+                                    >Email
+                                    <span class="text-danger">*</span></label
+                                >
+                                <input
+                                    type="email"
+                                    class="form-control"
+                                    id="email"
+                                    name="email"
+                                    value="{{ .Email }}"
+                                    readonly
+                                />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Jenis Kelamin <span class="text-danger">*</span></label>
+                                <label class="form-label"
+                                    >Jenis Kelamin
+                                    <span class="text-danger">*</span></label
+                                >
                                 <div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="jenisKelamin" id="jkL" value="Laki-laki" required>
-                                        <label class="form-check-label" for="jkL">Laki-laki</label>
+                                        <input
+                                            class="form-check-input"
+                                            type="radio"
+                                            name="jenisKelamin"
+                                            id="jkL"
+                                            value="Laki-laki"
+                                            required
+                                        />
+                                        <label
+                                            class="form-check-label"
+                                            for="jkL"
+                                            >Laki-laki</label
+                                        >
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="jenisKelamin" id="jkP" value="Perempuan">
-                                        <label class="form-check-label" for="jkP">Perempuan</label>
+                                        <input
+                                            class="form-check-input"
+                                            type="radio"
+                                            name="jenisKelamin"
+                                            id="jkP"
+                                            value="Perempuan"
+                                        />
+                                        <label
+                                            class="form-check-label"
+                                            for="jkP"
+                                            >Perempuan</label
+                                        >
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="noHp">Nomor WhatsApp <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="noHp" name="noHp" placeholder="Misal: 081234567890" required>
+                                <label class="form-label" for="noHp"
+                                    >Nomor WhatsApp
+                                    <span class="text-danger">*</span></label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="noHp"
+                                    name="noHp"
+                                    placeholder="Misal: 081234567890"
+                                    required
+                                />
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label class="form-label" for="alamat">Alamat Domisili <span class="text-danger">*</span></label>
-                                <textarea class="form-control" id="alamat" name="alamat" rows="2" placeholder="Detail jalan, nomor rumah, dll" required></textarea>
+                                <label class="form-label" for="alamat"
+                                    >Alamat Domisili
+                                    <span class="text-danger">*</span></label
+                                >
+                                <textarea
+                                    class="form-control"
+                                    id="alamat"
+                                    name="alamat"
+                                    rows="2"
+                                    placeholder="Detail jalan, nomor rumah, dll"
+                                    required
+                                ></textarea>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="kotaDomisili">Kota / Kabupaten Domisili <span class="text-danger">*</span></label>
-                                <select class="form-control" data-trigger id="kotaDomisili" name="kotaDomisili" required>
+                                <label class="form-label" for="kotaDomisili"
+                                    >Kota / Kabupaten Domisili
+                                    <span class="text-danger">*</span></label
+                                >
+                                <select
+                                    class="form-control"
+                                    data-trigger
+                                    id="kotaDomisili"
+                                    name="kotaDomisili"
+                                    required
+                                >
                                     <option value="">-- Pilih Kota --</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="kecamatanDomisili">Kecamatan Domisili <span class="text-danger">*</span></label>
-                                <select class="form-control" data-trigger id="kecamatanDomisili" name="kecamatanDomisili" disabled required>
-                                    <option value="">-- Pilih Kecamatan --</option>
+                                <label
+                                    class="form-label"
+                                    for="kecamatanDomisili"
+                                    >Kecamatan Domisili
+                                    <span class="text-danger">*</span></label
+                                >
+                                <select
+                                    class="form-control"
+                                    data-trigger
+                                    id="kecamatanDomisili"
+                                    name="kecamatanDomisili"
+                                    disabled
+                                    required
+                                >
+                                    <option value="">
+                                        -- Pilih Kecamatan --
+                                    </option>
                                 </select>
                             </div>
                         </div>
                     </div>
 
                     <!-- 2. Informasi Pendidikan -->
-                    <h5 class="font-size-14 mb-3 border-bottom pb-2 mt-4">Informasi Pendidikan</h5>
+                    <h5 class="font-size-14 mb-3 border-bottom pb-2 mt-4">
+                        Informasi Pendidikan
+                    </h5>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="programStudi">Program Studi dan Universitas <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="programStudi" name="programStudi" placeholder="Contoh: Teknik Informatika - UB" required>
+                                <label class="form-label" for="programStudi"
+                                    >Program Studi dan Universitas
+                                    <span class="text-danger">*</span></label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="programStudi"
+                                    name="programStudi"
+                                    placeholder="Contoh: Teknik Informatika - UB"
+                                    required
+                                />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="jenjangDitempuh">Jenjang yang sedang/sudah ditempuh <span class="text-danger">*</span></label>
-                                <select class="form-select" id="jenjangDitempuh" name="jenjangDitempuh" required>
-                                    <option value="">-- Pilih Jenjang --</option>
+                                <label class="form-label" for="jenjangDitempuh"
+                                    >Jenjang yang sedang/sudah ditempuh
+                                    <span class="text-danger">*</span></label
+                                >
+                                <select
+                                    class="form-select"
+                                    id="jenjangDitempuh"
+                                    name="jenjangDitempuh"
+                                    required
+                                >
+                                    <option value="">
+                                        -- Pilih Jenjang --
+                                    </option>
                                     <option value="D3">D3</option>
                                     <option value="D4/S1">D4 / S1</option>
                                     <option value="S2">S2</option>
@@ -99,9 +226,19 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="semester">Semester <span class="text-danger">*</span></label>
-                                <select class="form-select" id="semester" name="semester" required>
-                                    <option value="">-- Pilih Semester --</option>
+                                <label class="form-label" for="semester"
+                                    >Semester
+                                    <span class="text-danger">*</span></label
+                                >
+                                <select
+                                    class="form-select"
+                                    id="semester"
+                                    name="semester"
+                                    required
+                                >
+                                    <option value="">
+                                        -- Pilih Semester --
+                                    </option>
                                     <option value="Lulus">Sudah Lulus</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -118,29 +255,70 @@
                     </div>
 
                     <!-- 3. Peminatan Mengajar & Kesediaan -->
-                    <h5 class="font-size-14 mb-3 border-bottom pb-2 mt-4">Peminatan Mengajar & Ketersediaan</h5>
+                    <h5 class="font-size-14 mb-3 border-bottom pb-2 mt-4">
+                        Peminatan Mengajar & Ketersediaan
+                    </h5>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="jenjang">Jenjang yang dilamar (Target Siswa) <span class="text-danger">*</span></label>
-                                <select class="form-control" data-trigger id="jenjang" name="jenjang" required>
-                                    <option value="">-- Pilih Jenjang --</option>
+                                <label class="form-label" for="jenjang"
+                                    >Jenjang yang dilamar (Target Siswa)
+                                    <span class="text-danger">*</span></label
+                                >
+                                <select
+                                    class="form-control"
+                                    data-trigger
+                                    id="jenjang"
+                                    name="jenjang"
+                                    required
+                                >
+                                    <option value="">
+                                        -- Pilih Jenjang --
+                                    </option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="mapel">Mata Pelajaran yang Dilamar <span class="text-danger">*</span></label>
-                                <select class="form-control" data-trigger id="mapel" name="mapel" disabled required>
-                                    <option value="">-- Pilih Mata Pelajaran --</option>
+                                <label class="form-label" for="mapel"
+                                    >Mata Pelajaran yang Dilamar
+                                    <span class="text-danger">*</span></label
+                                >
+                                <select
+                                    class="form-control"
+                                    data-trigger
+                                    id="mapel"
+                                    name="mapel"
+                                    disabled
+                                    required
+                                >
+                                    <option value="">
+                                        -- Pilih Mata Pelajaran --
+                                    </option>
                                 </select>
-                                <div class="form-text">Mata pelajaran yang dipilih menentukan tes yang dilaksanakan</div>
+                                <div class="form-text">
+                                    Mata pelajaran yang dipilih menentukan tes
+                                    yang dilaksanakan
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label class="form-label" for="jangkauanMengajar">Jangkauan Wilayah Mengajar <span class="text-danger">*</span></label>
-                                <select class="form-control" data-trigger id="jangkauanMengajar" name="jangkauanMengajar[]" multiple="multiple" placeholder="Pilih wilayah jangkauan, bisa lebih dari 1" required>
+                                <label
+                                    class="form-label"
+                                    for="jangkauanMengajar"
+                                    >Jangkauan Wilayah Mengajar
+                                    <span class="text-danger">*</span></label
+                                >
+                                <select
+                                    class="form-control"
+                                    data-trigger
+                                    id="jangkauanMengajar"
+                                    name="jangkauanMengajar[]"
+                                    multiple="multiple"
+                                    placeholder="Pilih wilayah jangkauan, bisa lebih dari 1"
+                                    required
+                                >
                                     <!-- Options will be populated grouped by Kota via AJAX -->
                                 </select>
                             </div>
@@ -148,26 +326,66 @@
 
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label class="form-label">Kesediaan Mengajar Secara: <span class="text-danger">*</span></label>
+                                <label class="form-label"
+                                    >Kesediaan Mengajar Secara:
+                                    <span class="text-danger">*</span></label
+                                >
                                 <div class="table-responsive">
                                     <table class="table table-bordered mb-0">
                                         <thead class="table-light">
                                             <tr>
                                                 <th>Metode</th>
-                                                <th class="text-center">Bersedia</th>
-                                                <th class="text-center">Tidak Bersedia</th>
+                                                <th class="text-center">
+                                                    Bersedia
+                                                </th>
+                                                <th class="text-center">
+                                                    Tidak Bersedia
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <td>Online (Daring)</td>
-                                                <td class="text-center"><input class="form-check-input" type="radio" name="ketersediaanOnline" value="Bersedia" required></td>
-                                                <td class="text-center"><input class="form-check-input" type="radio" name="ketersediaanOnline" value="Tidak Bersedia"></td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="radio"
+                                                        name="ketersediaanOnline"
+                                                        value="Bersedia"
+                                                        required
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="radio"
+                                                        name="ketersediaanOnline"
+                                                        value="Tidak Bersedia"
+                                                    />
+                                                </td>
                                             </tr>
                                             <tr>
-                                                <td>Offline (Tatap muka langsung)</td>
-                                                <td class="text-center"><input class="form-check-input" type="radio" name="ketersediaanOffline" value="Bersedia" required></td>
-                                                <td class="text-center"><input class="form-check-input" type="radio" name="ketersediaanOffline" value="Tidak Bersedia"></td>
+                                                <td>
+                                                    Offline (Tatap muka
+                                                    langsung)
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="radio"
+                                                        name="ketersediaanOffline"
+                                                        value="Bersedia"
+                                                        required
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="radio"
+                                                        name="ketersediaanOffline"
+                                                        value="Tidak Bersedia"
+                                                    />
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -177,67 +395,274 @@
 
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label class="form-label">Jadwal Free untuk Mengajar <span class="text-danger">*</span></label>
+                                <label class="form-label"
+                                    >Jadwal Free untuk Mengajar
+                                    <span class="text-danger">*</span></label
+                                >
                                 <div class="table-responsive">
                                     <table class="table table-bordered mb-0">
                                         <thead class="table-light">
                                             <tr>
                                                 <th>Hari</th>
-                                                <th class="text-center">08.00 - 12.00</th>
-                                                <th class="text-center">12.00 - 18.00</th>
-                                                <th class="text-center">18.00 - 21.00</th>
-                                                <th class="text-center">Jadwal Penuh</th>
+                                                <th class="text-center">
+                                                    08.00 - 12.00
+                                                </th>
+                                                <th class="text-center">
+                                                    12.00 - 18.00
+                                                </th>
+                                                <th class="text-center">
+                                                    18.00 - 21.00
+                                                </th>
+                                                <th class="text-center">
+                                                    Jadwal Penuh
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <td>Senin</td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Senin[]" value="08.00 - 12.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Senin[]" value="12.00 - 18.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Senin[]" value="18.00 - 21.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Senin[]" value="Jadwal Penuh"></td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Senin[]"
+                                                        value="08.00 - 12.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Senin[]"
+                                                        value="12.00 - 18.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Senin[]"
+                                                        value="18.00 - 21.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Senin[]"
+                                                        value="Jadwal Penuh"
+                                                    />
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Selasa</td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Selasa[]" value="08.00 - 12.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Selasa[]" value="12.00 - 18.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Selasa[]" value="18.00 - 21.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Selasa[]" value="Jadwal Penuh"></td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Selasa[]"
+                                                        value="08.00 - 12.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Selasa[]"
+                                                        value="12.00 - 18.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Selasa[]"
+                                                        value="18.00 - 21.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Selasa[]"
+                                                        value="Jadwal Penuh"
+                                                    />
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Rabu</td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Rabu[]" value="08.00 - 12.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Rabu[]" value="12.00 - 18.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Rabu[]" value="18.00 - 21.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Rabu[]" value="Jadwal Penuh"></td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Rabu[]"
+                                                        value="08.00 - 12.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Rabu[]"
+                                                        value="12.00 - 18.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Rabu[]"
+                                                        value="18.00 - 21.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Rabu[]"
+                                                        value="Jadwal Penuh"
+                                                    />
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Kamis</td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Kamis[]" value="08.00 - 12.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Kamis[]" value="12.00 - 18.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Kamis[]" value="18.00 - 21.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Kamis[]" value="Jadwal Penuh"></td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Kamis[]"
+                                                        value="08.00 - 12.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Kamis[]"
+                                                        value="12.00 - 18.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Kamis[]"
+                                                        value="18.00 - 21.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Kamis[]"
+                                                        value="Jadwal Penuh"
+                                                    />
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Jumat</td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Jumat[]" value="08.00 - 12.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Jumat[]" value="12.00 - 18.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Jumat[]" value="18.00 - 21.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Jumat[]" value="Jadwal Penuh"></td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Jumat[]"
+                                                        value="08.00 - 12.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Jumat[]"
+                                                        value="12.00 - 18.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Jumat[]"
+                                                        value="18.00 - 21.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Jumat[]"
+                                                        value="Jadwal Penuh"
+                                                    />
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Sabtu</td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Sabtu[]" value="08.00 - 12.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Sabtu[]" value="12.00 - 18.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Sabtu[]" value="18.00 - 21.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Sabtu[]" value="Jadwal Penuh"></td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Sabtu[]"
+                                                        value="08.00 - 12.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Sabtu[]"
+                                                        value="12.00 - 18.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Sabtu[]"
+                                                        value="18.00 - 21.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Sabtu[]"
+                                                        value="Jadwal Penuh"
+                                                    />
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Minggu</td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Minggu[]" value="08.00 - 12.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Minggu[]" value="12.00 - 18.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Minggu[]" value="18.00 - 21.00"></td>
-                                                <td class="text-center"><input class="form-check-input" type="checkbox" name="jadwal_Minggu[]" value="Jadwal Penuh"></td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Minggu[]"
+                                                        value="08.00 - 12.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Minggu[]"
+                                                        value="12.00 - 18.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Minggu[]"
+                                                        value="18.00 - 21.00"
+                                                    />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="jadwal_Minggu[]"
+                                                        value="Jadwal Penuh"
+                                                    />
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -247,131 +672,332 @@
 
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="feeHarapan">Fee yang diharapkan <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="feeHarapan" name="feeHarapan" placeholder="Untuk 1x pertemuan (Misal: 50000)" required>
+                                <label class="form-label" for="feeHarapan"
+                                    >Fee yang diharapkan
+                                    <span class="text-danger">*</span></label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="feeHarapan"
+                                    name="feeHarapan"
+                                    placeholder="Untuk 1x pertemuan (Misal: 50000)"
+                                    required
+                                />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="mulaiMengajar">Kapan Anda dapat mulai mengajar jika diterima? <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="mulaiMengajar" name="mulaiMengajar" required>
-                                <div class="form-text">Tuliskan tanggal atau perkiraan periode mulai mengajar</div>
+                                <label class="form-label" for="mulaiMengajar"
+                                    >Kapan Anda dapat mulai mengajar jika
+                                    diterima?
+                                    <span class="text-danger">*</span></label
+                                >
+                                <input
+                                    type="date"
+                                    class="form-control"
+                                    id="mulaiMengajar"
+                                    name="mulaiMengajar"
+                                    required
+                                />
+                                <div class="form-text">
+                                    Tuliskan tanggal atau perkiraan periode
+                                    mulai mengajar
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- 4. Profil Pribadi Lanjutan -->
-                    <h5 class="font-size-14 mb-3 border-bottom pb-2 mt-4">Profil Pribadi Lanjutan</h5>
+                    <h5 class="font-size-14 mb-3 border-bottom pb-2 mt-4">
+                        Profil Pribadi Lanjutan
+                    </h5>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label class="form-label" for="pengalamanMengajar">Pengalaman Mengajar <span class="text-danger">*</span></label>
-                                <textarea class="form-control" id="pengalamanMengajar" name="pengalamanMengajar" rows="3" required></textarea>
+                                <label
+                                    class="form-label"
+                                    for="pengalamanMengajar"
+                                    >Pengalaman Mengajar
+                                    <span class="text-danger">*</span></label
+                                >
+                                <textarea
+                                    class="form-control"
+                                    id="pengalamanMengajar"
+                                    name="pengalamanMengajar"
+                                    rows="3"
+                                    required
+                                ></textarea>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="kelebihanDiri">Kelebihan Diri <span class="text-danger">*</span></label>
-                                <textarea class="form-control" id="kelebihanDiri" name="kelebihanDiri" rows="3" placeholder="Beri gambaran secara spesifik" required></textarea>
+                                <label class="form-label" for="kelebihanDiri"
+                                    >Kelebihan Diri
+                                    <span class="text-danger">*</span></label
+                                >
+                                <textarea
+                                    class="form-control"
+                                    id="kelebihanDiri"
+                                    name="kelebihanDiri"
+                                    rows="3"
+                                    placeholder="Beri gambaran secara spesifik"
+                                    required
+                                ></textarea>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="kekuranganDiri">Kekurangan Diri <span class="text-danger">*</span></label>
-                                <textarea class="form-control" id="kekuranganDiri" name="kekuranganDiri" rows="3" placeholder="Beri gambaran secara spesifik" required></textarea>
+                                <label class="form-label" for="kekuranganDiri"
+                                    >Kekurangan Diri
+                                    <span class="text-danger">*</span></label
+                                >
+                                <textarea
+                                    class="form-control"
+                                    id="kekuranganDiri"
+                                    name="kekuranganDiri"
+                                    rows="3"
+                                    placeholder="Beri gambaran secara spesifik"
+                                    required
+                                ></textarea>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label class="form-label" for="aktivitasPrioritas">Aktivitas dan persentase prioritas <span class="text-danger">*</span></label>
-                                <textarea class="form-control" id="aktivitasPrioritas" name="aktivitasPrioritas" rows="2" placeholder="contoh: Kuliah 60%, Organisasi 20%, LBB Gold Generation 20%" required></textarea>
+                                <label
+                                    class="form-label"
+                                    for="aktivitasPrioritas"
+                                    >Aktivitas dan persentase prioritas
+                                    <span class="text-danger">*</span></label
+                                >
+                                <textarea
+                                    class="form-control"
+                                    id="aktivitasPrioritas"
+                                    name="aktivitasPrioritas"
+                                    rows="2"
+                                    placeholder="contoh: Kuliah 60%, Organisasi 20%, LBB Gold Generation 20%"
+                                    required
+                                ></textarea>
                             </div>
                         </div>
                     </div>
 
                     <!-- 5. Kontak Darurat & Informasi Tambahan -->
-                    <h5 class="font-size-14 mb-3 border-bottom pb-2 mt-4">Kontak Darurat & Informasi Tambahan</h5>
+                    <h5 class="font-size-14 mb-3 border-bottom pb-2 mt-4">
+                        Kontak Darurat & Informasi Tambahan
+                    </h5>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="namaOrangTua">Nama Orang Tua / Wali <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="namaOrangTua" name="namaOrangTua" required>
+                                <label class="form-label" for="namaOrangTua"
+                                    >Nama Orang Tua / Wali
+                                    <span class="text-danger">*</span></label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="namaOrangTua"
+                                    name="namaOrangTua"
+                                    required
+                                />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="hpOrangTua">No HP Orang Tua / Wali <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="hpOrangTua" name="hpOrangTua" required>
+                                <label class="form-label" for="hpOrangTua"
+                                    >No HP Orang Tua / Wali
+                                    <span class="text-danger">*</span></label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="hpOrangTua"
+                                    name="hpOrangTua"
+                                    required
+                                />
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label class="form-label">Tahu Informasi Lowongan Ini Dari: <span class="text-danger">*</span></label>
+                                <label class="form-label"
+                                    >Tahu Informasi Lowongan Ini Dari:
+                                    <span class="text-danger">*</span></label
+                                >
                                 <div class="row">
                                     <div class="col-md-4 col-sm-6">
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="infoLowongan[]" value="Facebook" id="info_Facebook">
-                                            <label class="form-check-label" for="info_Facebook">Facebook</label>
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                name="infoLowongan[]"
+                                                value="Facebook"
+                                                id="info_Facebook"
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                for="info_Facebook"
+                                                >Facebook</label
+                                            >
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="infoLowongan[]" value="Instagram" id="info_Instagram">
-                                            <label class="form-check-label" for="info_Instagram">Instagram</label>
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                name="infoLowongan[]"
+                                                value="Instagram"
+                                                id="info_Instagram"
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                for="info_Instagram"
+                                                >Instagram</label
+                                            >
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="infoLowongan[]" value="Lumina" id="info_Lumina">
-                                            <label class="form-check-label" for="info_Lumina">Lumina</label>
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                name="infoLowongan[]"
+                                                value="Lumina"
+                                                id="info_Lumina"
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                for="info_Lumina"
+                                                >Lumina</label
+                                            >
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="infoLowongan[]" value="Kitalulus" id="info_Kitalulus">
-                                            <label class="form-check-label" for="info_Kitalulus">Kitalulus</label>
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                name="infoLowongan[]"
+                                                value="Kitalulus"
+                                                id="info_Kitalulus"
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                for="info_Kitalulus"
+                                                >Kitalulus</label
+                                            >
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="infoLowongan[]" value="Teman/Saudara/Kenalan" id="info_Teman">
-                                            <label class="form-check-label" for="info_Teman">Teman/Saudara/Kenalan</label>
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                name="infoLowongan[]"
+                                                value="Teman/Saudara/Kenalan"
+                                                id="info_Teman"
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                for="info_Teman"
+                                                >Teman/Saudara/Kenalan</label
+                                            >
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="infoLowongan[]" value="Website" id="info_Website">
-                                            <label class="form-check-label" for="info_Website">Website</label>
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                name="infoLowongan[]"
+                                                value="Website"
+                                                id="info_Website"
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                for="info_Website"
+                                                >Website</label
+                                            >
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="infoLowongan[]" value="Jobstreet" id="info_Jobstreet">
-                                            <label class="form-check-label" for="info_Jobstreet">Jobstreet</label>
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                name="infoLowongan[]"
+                                                value="Jobstreet"
+                                                id="info_Jobstreet"
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                for="info_Jobstreet"
+                                                >Jobstreet</label
+                                            >
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="infoLowongan[]" value="Glints" id="info_Glints">
-                                            <label class="form-check-label" for="info_Glints">Glints</label>
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                name="infoLowongan[]"
+                                                value="Glints"
+                                                id="info_Glints"
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                for="info_Glints"
+                                                >Glints</label
+                                            >
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="infoLowongan[]" value="Tiktok" id="info_Tiktok">
-                                            <label class="form-check-label" for="info_Tiktok">Tiktok</label>
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                name="infoLowongan[]"
+                                                value="Tiktok"
+                                                id="info_Tiktok"
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                for="info_Tiktok"
+                                                >Tiktok</label
+                                            >
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="infoLowongan[]" value="Linkedin" id="info_Linkedin">
-                                            <label class="form-check-label" for="info_Linkedin">Linkedin</label>
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                name="infoLowongan[]"
+                                                value="Linkedin"
+                                                id="info_Linkedin"
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                for="info_Linkedin"
+                                                >Linkedin</label
+                                            >
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="infoLowongan[]" value="Lainnya" id="info_Lainnya">
-                                            <label class="form-check-label" for="info_Lainnya">Lainnya</label>
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                name="infoLowongan[]"
+                                                value="Lainnya"
+                                                id="info_Lainnya"
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                for="info_Lainnya"
+                                                >Lainnya</label
+                                            >
                                         </div>
                                     </div>
                                 </div>
@@ -380,51 +1006,129 @@
                     </div>
 
                     <!-- 6. Upload Dokumen -->
-                    <h5 class="font-size-14 mb-3 border-bottom pb-2 mt-4">Upload Dokumen Pendukung</h5>
+                    <h5 class="font-size-14 mb-3 border-bottom pb-2 mt-4">
+                        Upload Dokumen Pendukung
+                    </h5>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="transkrip">Upload Transkrip Nilai Terakhir <span class="text-danger">*</span></label>
-                                <input type="file" class="form-control" id="transkrip" name="transkrip" accept=".pdf,.doc,.docx,image/*" required>
-                                <div class="form-text">Maksimal ukuran file: 10 MB.</div>
+                                <label class="form-label" for="transkrip"
+                                    >Upload Transkrip Nilai Terakhir
+                                    <span class="text-danger">*</span></label
+                                >
+                                <input
+                                    type="file"
+                                    class="form-control"
+                                    id="transkrip"
+                                    name="transkrip"
+                                    accept=".pdf,.doc,.docx,image/*"
+                                    required
+                                />
+                                <div class="form-text">
+                                    Maksimal ukuran file: 10 MB.
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="cv">Upload CV (Curriculum Vitae) <span class="text-danger">*</span></label>
-                                <input type="file" class="form-control" id="cv" name="cv" accept=".pdf" required>
-                                <div class="form-text">Maksimal ukuran file: 10 MB (Format: PDF).</div>
+                                <label class="form-label" for="cv"
+                                    >Upload CV (Curriculum Vitae)
+                                    <span class="text-danger">*</span></label
+                                >
+                                <input
+                                    type="file"
+                                    class="form-control"
+                                    id="cv"
+                                    name="cv"
+                                    accept=".pdf"
+                                    required
+                                />
+                                <div class="form-text">
+                                    Maksimal ukuran file: 10 MB (Format: PDF).
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- 7. Ketentuan Pengajar -->
-                    <h5 class="font-size-14 mb-3 border-bottom pb-2 mt-4">Ketentuan Pengajar <span class="text-danger">*</span></h5>
+                    <h5 class="font-size-14 mb-3 border-bottom pb-2 mt-4">
+                        Ketentuan Pengajar <span class="text-danger">*</span>
+                    </h5>
                     <div class="row mb-4">
                         <div class="col-12">
-                            <p class="text-muted mb-2">Silakan centang jika Anda menyetujui kesepakatan dan komitmen yang telah ditetapkan:</p>
+                            <p class="text-muted mb-2">
+                                Silakan centang jika Anda menyetujui kesepakatan
+                                dan komitmen yang telah ditetapkan:
+                            </p>
                             <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" id="ketentuan1" required>
-                                <label class="form-check-label" for="ketentuan1">Saya bersedia dikontrak selama 1 tahun</label>
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    id="ketentuan1"
+                                    required
+                                />
+                                <label class="form-check-label" for="ketentuan1"
+                                    >Saya bersedia dikontrak selama 1
+                                    tahun</label
+                                >
                             </div>
                             <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" id="ketentuan2" required>
-                                <label class="form-check-label" for="ketentuan2">Saya bersedia mengikuti agenda rutin bimbel selama 1 bulan 1 kali (apabila ada)</label>
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    id="ketentuan2"
+                                    required
+                                />
+                                <label class="form-check-label" for="ketentuan2"
+                                    >Saya bersedia mengikuti agenda rutin bimbel
+                                    selama 1 bulan 1 kali (apabila ada)</label
+                                >
                             </div>
                             <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" id="ketentuan3" required>
-                                <label class="form-check-label" for="ketentuan3">Saya bersedia melaksanakan 5 pertemuan dalam 1 minggu</label>
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    id="ketentuan3"
+                                    required
+                                />
+                                <label class="form-check-label" for="ketentuan3"
+                                    >Saya bersedia melaksanakan 5 pertemuan
+                                    dalam 1 minggu</label
+                                >
                             </div>
                             <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" id="ketentuan4" required>
-                                <label class="form-check-label" for="ketentuan4">Saya bersedia mengajar ke rumah siswa dan atau ke kantor</label>
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    id="ketentuan4"
+                                    required
+                                />
+                                <label class="form-check-label" for="ketentuan4"
+                                    >Saya bersedia mengajar ke rumah siswa dan
+                                    atau ke kantor</label
+                                >
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
-                        <p class="text-muted mb-0"><span class="text-danger">*</span> Wajib diisi</p>
-                        <button type="submit" class="btn btn-primary btn-lg waves-effect waves-light">Kirim Lamaran</button>
+                    <div
+                        class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center"
+                    >
+                        <p class="text-muted mb-0">
+                            <span class="text-danger">*</span> Wajib diisi
+                        </p>
+                        <button
+                            type="submit"
+                            id="btnSubmitLamaran"
+                            class="btn btn-primary btn-lg waves-effect waves-light"
+                        >
+                            <span
+                                class="spinner-border spinner-border-sm me-1 d-none"
+                                role="status"
+                                aria-hidden="true"
+                            ></span>
+                            Kirim Lamaran
+                        </button>
                     </div>
                 </form>
                 {{ end }}
@@ -434,106 +1138,183 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener("DOMContentLoaded", function () {
+        // Form submission loader
+        const applyForm = document.getElementById("applyForm");
+        const btnSubmit = document.getElementById("btnSubmitLamaran");
+
+        if (applyForm) {
+            applyForm.addEventListener("submit", function () {
+                btnSubmit.disabled = true;
+                btnSubmit
+                    .querySelector(".spinner-border")
+                    .classList.remove("d-none");
+                btnSubmit.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Mengirim...`;
+            });
+        }
+
         // Initialize Choices.js
-        const kotaChoices = new Choices('#kotaDomisili', { searchEnabled: true, placeholder: true });
-        const kecChoices = new Choices('#kecamatanDomisili', { searchEnabled: true, placeholder: true });
-        const jenjangChoices = new Choices('#jenjang', { searchEnabled: true, placeholder: true });
-        const mapelChoices = new Choices('#mapel', { searchEnabled: true, placeholder: true });
-        const jangkauanChoices = new Choices('#jangkauanMengajar', { removeItemButton: true, searchEnabled: true });
-        
+        const kotaChoices = new Choices("#kotaDomisili", {
+            searchEnabled: true,
+            placeholder: true,
+        });
+        const kecChoices = new Choices("#kecamatanDomisili", {
+            searchEnabled: true,
+            placeholder: true,
+        });
+        const jenjangChoices = new Choices("#jenjang", {
+            searchEnabled: true,
+            placeholder: true,
+        });
+        const mapelChoices = new Choices("#mapel", {
+            searchEnabled: true,
+            placeholder: true,
+        });
+        const jangkauanChoices = new Choices("#jangkauanMengajar", {
+            removeItemButton: true,
+            searchEnabled: true,
+        });
+
         // Fetch Kota Domisili
         $.ajax({
-            url: '/api/v1/kota',
-            method: 'GET',
-            success: function(res) {
-                if(res.data) {
-                    let choicesArray = res.data.map(item => ({ value: item.id, label: item.name }));
-                    kotaChoices.setChoices(choicesArray, 'value', 'label', true);
+            url: "/api/v1/kota",
+            method: "GET",
+            success: function (res) {
+                if (res.data) {
+                    let choicesArray = res.data.map((item) => ({
+                        value: item.id,
+                        label: item.name,
+                    }));
+                    kotaChoices.setChoices(
+                        choicesArray,
+                        "value",
+                        "label",
+                        true,
+                    );
                 }
-            }
+            },
         });
 
         // Fetch Kecamatan when Kota changes
-        $('#kotaDomisili').get(0).addEventListener('change', function(e) {
-            const kotaId = e.detail.value;
-            kecChoices.clearStore(); // Clear previous choices
-            if(!kotaId) {
-                kecChoices.disable();
-                return;
-            }
-            
-            kecChoices.enable();
-            $.ajax({
-                url: `/api/v1/kecamatan`,
-                method: 'GET',
-                success: function(res) {
-                    if(res.data) {
-                        let filtered = res.data.filter(item => item.kota_id == kotaId);
-                        let choicesArray = filtered.map(item => ({ value: item.id, label: item.name }));
-                        kecChoices.setChoices(choicesArray, 'value', 'label', true);
-                    }
+        $("#kotaDomisili")
+            .get(0)
+            .addEventListener("change", function (e) {
+                const kotaId = e.detail.value;
+                kecChoices.clearStore(); // Clear previous choices
+                if (!kotaId) {
+                    kecChoices.disable();
+                    return;
                 }
+
+                kecChoices.enable();
+                $.ajax({
+                    url: `/api/v1/kecamatan`,
+                    method: "GET",
+                    success: function (res) {
+                        if (res.data) {
+                            let filtered = res.data.filter(
+                                (item) => item.kota_id == kotaId,
+                            );
+                            let choicesArray = filtered.map((item) => ({
+                                value: item.id,
+                                label: item.name,
+                            }));
+                            kecChoices.setChoices(
+                                choicesArray,
+                                "value",
+                                "label",
+                                true,
+                            );
+                        }
+                    },
+                });
             });
-        });
 
         // Fetch Jenjang Pendidikan
         $.ajax({
-            url: '/api/v1/jenis-pendidikan',
-            method: 'GET',
-            success: function(res) {
-                if(res.data) {
-                    let choicesArray = res.data.map(item => ({ value: item.id, label: item.name }));
-                    jenjangChoices.setChoices(choicesArray, 'value', 'label', true);
+            url: "/api/v1/jenis-pendidikan",
+            method: "GET",
+            success: function (res) {
+                if (res.data) {
+                    let choicesArray = res.data.map((item) => ({
+                        value: item.id,
+                        label: item.name,
+                    }));
+                    jenjangChoices.setChoices(
+                        choicesArray,
+                        "value",
+                        "label",
+                        true,
+                    );
                 }
-            }
+            },
         });
 
         // Fetch Mapel when Jenjang changes
-        $('#jenjang').get(0).addEventListener('change', function(e) {
-            const jpId = e.detail.value;
-            mapelChoices.clearStore(); // Clear previous choices
-            if(!jpId) {
-                mapelChoices.disable();
-                return;
-            }
-            
-            mapelChoices.enable();
-            $.ajax({
-                url: `/api/v1/mapel`,
-                method: 'GET',
-                success: function(res) {
-                    if(res.data) {
-                        let filtered = res.data.filter(item => item.jenis_pendidikan_id == jpId);
-                        let choicesArray = filtered.map(item => ({ value: item.id, label: item.name }));
-                        mapelChoices.setChoices(choicesArray, 'value', 'label', true);
-                    }
+        $("#jenjang")
+            .get(0)
+            .addEventListener("change", function (e) {
+                const jpId = e.detail.value;
+                mapelChoices.clearStore(); // Clear previous choices
+                if (!jpId) {
+                    mapelChoices.disable();
+                    return;
                 }
+
+                mapelChoices.enable();
+                $.ajax({
+                    url: `/api/v1/mapel`,
+                    method: "GET",
+                    success: function (res) {
+                        if (res.data) {
+                            let filtered = res.data.filter(
+                                (item) => item.jenis_pendidikan_id == jpId,
+                            );
+                            let choicesArray = filtered.map((item) => ({
+                                value: item.id,
+                                label: item.name,
+                            }));
+                            mapelChoices.setChoices(
+                                choicesArray,
+                                "value",
+                                "label",
+                                true,
+                            );
+                        }
+                    },
+                });
             });
-        });
 
         // Fetch Jangkauan Mengajar
         $.ajax({
-            url: '/api/v1/kecamatan',
-            method: 'GET',
-            success: function(res) {
-                if(res.data) {
+            url: "/api/v1/kecamatan",
+            method: "GET",
+            success: function (res) {
+                if (res.data) {
                     let grouped = {};
-                    res.data.forEach(item => {
-                        let kotaName = item.kota ? item.kota.name : 'Unknown';
-                        if(!grouped[kotaName]) grouped[kotaName] = [];
-                        grouped[kotaName].push({ value: item.id, label: item.name });
+                    res.data.forEach((item) => {
+                        let kotaName = item.kota ? item.kota.name : "Unknown";
+                        if (!grouped[kotaName]) grouped[kotaName] = [];
+                        grouped[kotaName].push({
+                            value: item.id,
+                            label: item.name,
+                        });
                     });
 
-                    let choicesArray = Object.keys(grouped).map(kota => ({
+                    let choicesArray = Object.keys(grouped).map((kota) => ({
                         label: kota,
                         id: kota,
                         disabled: false,
-                        choices: grouped[kota]
+                        choices: grouped[kota],
                     }));
-                    jangkauanChoices.setChoices(choicesArray, 'value', 'label', true);
+                    jangkauanChoices.setChoices(
+                        choicesArray,
+                        "value",
+                        "label",
+                        true,
+                    );
                 }
-            }
+            },
         });
     });
 </script>

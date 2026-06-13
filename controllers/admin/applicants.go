@@ -39,3 +39,11 @@ func ShowApplicant(c *fiber.Ctx) error {
 		"Pelamar":    pelamar,
 	}), "layouts/base")
 }
+
+// ShowRecruitmentPelamar renders the recruitment transaction page for applicants.
+func ShowRecruitmentPelamar(c *fiber.Ctx) error {
+	return c.Render("admin/recruitment/transaksi/pelamar", contextData(c, fiber.Map{
+		"Title":      "Transaksi Pelamar",
+		"Breadcrumb": "Recruitment / Transaksi / Pelamar",
+	}), "layouts/base")
+}

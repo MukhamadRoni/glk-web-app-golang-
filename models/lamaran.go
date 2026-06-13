@@ -42,6 +42,8 @@ type Lamaran struct {
 
 	Status string `gorm:"size:50;default:'Pending'" json:"status"` // Pending, Diterima, Ditolak, dll
 
+	KoreksiNilai string `gorm:"type:text" json:"koreksi_nilai"` // JSON string for manual scoring
+
 	// Relationships
 	Pelamar       Pelamar         `gorm:"foreignKey:PelamarID" json:"pelamar"`
 	Kota          Kota            `gorm:"foreignKey:KotaID" json:"kota"`

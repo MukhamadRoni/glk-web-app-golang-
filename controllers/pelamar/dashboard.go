@@ -8,6 +8,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -25,7 +26,7 @@ func ShowDashboard(c *fiber.Ctx) error {
 	}
 
 	hasApplied, lamaran, err := models.CheckIfPelamarHasApplied(config.DB, pelamarID)
-	
+
 	var applications []models.Lamaran
 	hasPendingTest := false
 
@@ -35,7 +36,7 @@ func ShowDashboard(c *fiber.Ctx) error {
 		// Check if test exists for this lamaran
 		if lamaran.Status != "Selesai Tes" {
 			var count int64
-			config.DB.Model(&models.BankSoalA{}).Where("jenis_pendidikan_id = ? AND mata_pelajaran_id = ? AND active = 'T'", 
+			config.DB.Model(&models.BankSoalA{}).Where("jenis_pendidikan_id = ? AND mata_pelajaran_id = ? AND active = 'T'",
 				lamaran.TargetJenjangID, lamaran.TargetMapelID).Count(&count)
 			if count > 0 {
 				hasPendingTest = true
@@ -99,6 +100,11 @@ func ProcessApply(c *fiber.Ctx) error {
 		log.Println("Error parsing body:", err)
 	}
 
+	// 1. Ambil Nama untuk penamaan file
+	namaLengkap := c.FormValue("namaLengkap")
+	safeNama := strings.ReplaceAll(namaLengkap, " ", "_")
+	timestamp := time.Now().Format("20060102_150405")
+
 	// 1. Ambil File Transkrip
 	transkripFile, err := c.FormFile("transkrip")
 	if err != nil {
@@ -107,7 +113,7 @@ func ProcessApply(c *fiber.Ctx) error {
 	}
 
 	// Upload Transkrip ke Google Drive
-	transkripURL, err := utils.UploadToGDrive(transkripFile)
+	transkripURL, err := utils.UploadToGDrive(transkripFile, "TRANSKRIP_"+safeNama+"_"+timestamp)
 	if err != nil {
 		log.Println("Failed to upload transkrip:", err)
 		return c.Redirect("/apply?error=Failed to upload transkrip")
@@ -121,7 +127,7 @@ func ProcessApply(c *fiber.Ctx) error {
 	}
 
 	// Upload CV ke Google Drive
-	cvURL, err := utils.UploadToGDrive(cvFile)
+	cvURL, err := utils.UploadToGDrive(cvFile, "CV_"+safeNama+"_"+timestamp)
 	if err != nil {
 		log.Println("Failed to upload CV:", err)
 		return c.Redirect("/apply?error=Failed to upload CV")
@@ -133,7 +139,7 @@ func ProcessApply(c *fiber.Ctx) error {
 		log.Println("MultipartForm error:", err)
 		return c.Redirect("/apply?error=Invalid form data")
 	}
-	
+
 	kotaID, _ := strconv.Atoi(c.FormValue("kotaDomisili"))
 	kecamatanID, _ := strconv.Atoi(c.FormValue("kecamatanDomisili"))
 	targetJenjangID, _ := strconv.Atoi(c.FormValue("jenjang"))
@@ -157,27 +163,27 @@ func ProcessApply(c *fiber.Ctx) error {
 		PelamarID:        pelamarID,
 		NamaLengkap:      c.FormValue("namaLengkap"),
 		JenisKelamin:     c.FormValue("jenisKelamin"),
-		NoWA:             c.FormValue("noWa"),
-		AlamatDomisili:   c.FormValue("alamatDomisili"),
+		NoWA:             c.FormValue("noHp"),
+		AlamatDomisili:   c.FormValue("alamat"),
 		KotaID:           uint(kotaID),
 		KecamatanID:      uint(kecamatanID),
 		ProgramStudi:     c.FormValue("programStudi"),
-		Universitas:      c.FormValue("universitas"),
+		Universitas:      c.FormValue("programStudi"), // Default to same field as ProgramStudi if not split
 		JenjangDitempuh:  c.FormValue("jenjangDitempuh"),
 		Semester:         c.FormValue("semester"),
 		TargetJenjangID:  uint(targetJenjangID),
 		TargetMapelID:    uint(targetMapelID),
 		JangkauanWilayah: jangkauan,
-		Ketersediaan:     c.FormValue("ketersediaanMengajar"),
+		Ketersediaan:     c.FormValue("ketersediaanOnline") + ", " + c.FormValue("ketersediaanOffline"),
 		JadwalFree:       string(jadwalJSON),
 		FeeHarapan:       c.FormValue("feeHarapan"),
 		MulaiMengajar:    c.FormValue("mulaiMengajar"),
-		Pengalaman:       c.FormValue("pengalaman"),
-		Kelebihan:        c.FormValue("kelebihan"),
-		Kekurangan:       c.FormValue("kekurangan"),
-		Prioritas:        c.FormValue("prioritas"),
-		NamaOrtu:         c.FormValue("namaOrtu"),
-		NoHPOrtu:         c.FormValue("noHpOrtu"),
+		Pengalaman:       c.FormValue("pengalamanMengajar"),
+		Kelebihan:        c.FormValue("kelebihanDiri"),
+		Kekurangan:       c.FormValue("kekuranganDiri"),
+		Prioritas:        c.FormValue("aktivitasPrioritas"),
+		NamaOrtu:         c.FormValue("namaOrangTua"),
+		NoHPOrtu:         c.FormValue("hpOrangTua"),
 		InfoLowongan:     infoLowongan,
 		TranskripURL:     transkripURL,
 		CVURL:            cvURL,
@@ -191,9 +197,9 @@ func ProcessApply(c *fiber.Ctx) error {
 
 	// Check if BankSoal exists
 	var count int64
-	config.DB.Model(&models.BankSoalA{}).Where("jenis_pendidikan_id = ? AND mata_pelajaran_id = ? AND active = 'T'", 
+	config.DB.Model(&models.BankSoalA{}).Where("jenis_pendidikan_id = ? AND mata_pelajaran_id = ? AND active = 'T'",
 		lamaran.TargetJenjangID, lamaran.TargetMapelID).Count(&count)
-	
+
 	if count > 0 {
 		return c.Redirect("/test/intro")
 	}
