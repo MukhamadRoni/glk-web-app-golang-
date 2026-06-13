@@ -3,45 +3,60 @@ package admin
 import (
 	"glk-web-app/config"
 	"glk-web-app/models"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-// ShowDashboard renders the admin dashboard with summary statistics.
+// ShowDashboard renders the global HRIS dashboard with a welcome message.
 func ShowDashboard(c *fiber.Ctx) error {
-	allPelamar, err := models.GetAllPelamar(config.DB)
+	return c.Render("admin/dashboard", contextData(c, fiber.Map{
+		"Title":      "Dashboard Global",
+		"Breadcrumb": "Dashboard",
+		"Welcome":    "Selamat datang di HRIS Gurulesku",
+	}), "layouts/base")
+}
+
+// ShowRecruitmentDashboard renders the recruitment specific dashboard with summary statistics.
+func ShowRecruitmentDashboard(c *fiber.Ctx) error {
+	var lamarans []models.Lamaran
+	// Gunakan Order ID DESC sebagai cadangan jika created_at bermasalah,
+	// dan pastikan Preload Pelamar sukses
+	err := config.DB.Preload("Pelamar").Order("id DESC").Find(&lamarans).Error
 	if err != nil {
-		allPelamar = []models.Pelamar{}
+		log.Println("[Dashboard] Error fetching lamarans:", err)
+		lamarans = []models.Lamaran{}
 	}
+
+	log.Printf("[Dashboard] Total lamarans found: %d", len(lamarans))
 
 	// Calculate stats
 	var accepted, pending, rejected int
-	for _, p := range allPelamar {
-		switch p.Status {
-		case "accepted":
+	for _, l := range lamarans {
+		if l.Status == "Diterima" {
 			accepted++
-		case "rejected":
+		} else if l.Status == "Ditolak" {
 			rejected++
-		default:
+		} else {
 			pending++
 		}
 	}
 
-	// Show only the 10 most recent applicants in the table
-	recent := allPelamar
+	// Show only the 10 most recent lamaran in the table
+	recent := lamarans
 	if len(recent) > 10 {
 		recent = recent[:10]
 	}
 
-	return c.Render("admin/dashboard", contextData(c, fiber.Map{
-		"Title":      "Dashboard",
-		"Breadcrumb": "Dashboard",
+	return c.Render("admin/recruitment/dashboard", contextData(c, fiber.Map{
+		"Title":      "Recruitment Dashboard",
+		"Breadcrumb": "Recruitment / Dashboard",
 		"Stats": fiber.Map{
-			"TotalApplicants": len(allPelamar),
+			"TotalApplicants": len(lamarans),
 			"Accepted":        accepted,
 			"Pending":         pending,
 			"Rejected":        rejected,
 		},
-		"Applicants": recent,
+		"Lamarans": recent,
 	}), "layouts/base")
 }

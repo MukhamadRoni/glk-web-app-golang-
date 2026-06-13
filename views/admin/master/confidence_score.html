@@ -1,0 +1,70 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title mb-0">Master Confidence Score</h4>
+                <button class="btn btn-sm btn-primary" id="btnAddCS">
+                    <i class="bx bx-plus"></i> Tambah Confidence Score
+                </button>
+            </div>
+            <div class="card-body">
+                <div id="table-confidence-score"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal CRUD CS -->
+<div class="modal fade" id="modalCS" tabindex="-1" aria-labelledby="modalCSLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCSLabel">Confidence Score</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formCS">
+                <div class="modal-body">
+                    <input type="hidden" id="csID">
+                    <div class="mb-3">
+                        <label class="form-label">Nama Kategori</label>
+                        <input type="text" id="csName" class="form-control" placeholder="Contoh: Reject, Pass, Excellent" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Warna Badge (Hex)</label>
+                        <div class="input-group">
+                            <input type="color" id="csColorPicker" class="form-control form-control-color" style="width: 50px;">
+                            <input type="text" id="csColor" class="form-control" placeholder="#FFFFFF" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="form-label">Skor Minimal</label>
+                                <input type="number" id="csMin" class="form-control" min="0" max="100" required>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="form-label">Skor Maksimal</label>
+                                <input type="number" id="csMax" class="form-control" min="0" max="100" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Grid.js Styles -->
+<link rel="stylesheet" href="/static/libs/gridjs/theme/mermaid.min.css">
+
+<!-- Grid.js JS -->
+<script src="/static/libs/gridjs/gridjs.umd.js"></script>
+
+<!-- Custom JS -->
+<script src="/static/js/confidence_score.js"></script>

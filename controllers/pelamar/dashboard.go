@@ -89,6 +89,8 @@ func ProcessApply(c *fiber.Ctx) error {
 		return c.Redirect("/login")
 	}
 
+	pelamar, _ := models.GetPelamarByID(config.DB, pelamarID)
+
 	// Prevent double submission
 	hasApplied, _, err := models.CheckIfPelamarHasApplied(config.DB, pelamarID)
 	if err != nil || hasApplied {
@@ -102,6 +104,9 @@ func ProcessApply(c *fiber.Ctx) error {
 
 	// 1. Ambil Nama untuk penamaan file
 	namaLengkap := c.FormValue("namaLengkap")
+	if namaLengkap == "" && pelamar != nil {
+		namaLengkap = pelamar.Name
+	}
 	safeNama := strings.ReplaceAll(namaLengkap, " ", "_")
 	timestamp := time.Now().Format("20060102_150405")
 
@@ -159,6 +164,13 @@ func ProcessApply(c *fiber.Ctx) error {
 	}
 	jadwalJSON, _ := json.Marshal(jadwal)
 
+	// Proses Ketersediaan
+	ketersediaanMap := map[string]string{
+		"Online":  c.FormValue("ketersediaanOnline"),
+		"Offline": c.FormValue("ketersediaanOffline"),
+	}
+	ketersediaanJSON, _ := json.Marshal(ketersediaanMap)
+
 	lamaran := models.Lamaran{
 		PelamarID:        pelamarID,
 		NamaLengkap:      c.FormValue("namaLengkap"),
@@ -174,7 +186,7 @@ func ProcessApply(c *fiber.Ctx) error {
 		TargetJenjangID:  uint(targetJenjangID),
 		TargetMapelID:    uint(targetMapelID),
 		JangkauanWilayah: jangkauan,
-		Ketersediaan:     c.FormValue("ketersediaanOnline") + ", " + c.FormValue("ketersediaanOffline"),
+		Ketersediaan:     string(ketersediaanJSON),
 		JadwalFree:       string(jadwalJSON),
 		FeeHarapan:       c.FormValue("feeHarapan"),
 		MulaiMengajar:    c.FormValue("mulaiMengajar"),

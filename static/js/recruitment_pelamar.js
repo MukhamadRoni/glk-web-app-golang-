@@ -23,6 +23,10 @@ document.addEventListener("DOMContentLoaded", function () {
   let grid;
 
   function initGrid() {
+    if (typeof gridjs === "undefined") {
+      console.warn("Grid.js is not loaded. Skipping table initialization.");
+      return;
+    }
     grid = new gridjs.Grid({
       columns: [
         { name: "ID", hidden: true },
@@ -193,6 +197,123 @@ document.addEventListener("DOMContentLoaded", function () {
                     </table>
                 </div>
             </div>
+
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <h6 class="fw-bold"><i class="bx bx-calendar-check"></i> Ketersediaan & Jadwal Mengajar</h6>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <table class="table table-sm table-bordered text-center">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Metode</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${(() => {
+                                      let ket = {};
+                                      try {
+                                        // Handle both JSON string and comma separated fallback
+                                        if (
+                                          l.ketersediaan &&
+                                          l.ketersediaan.startsWith("{")
+                                        ) {
+                                          ket = JSON.parse(l.ketersediaan);
+                                        } else {
+                                          const parts = (
+                                            l.ketersediaan || ""
+                                          ).split(",");
+                                          ket = {
+                                            Online: parts[0] || "-",
+                                            Offline: parts[1] || "-",
+                                          };
+                                        }
+                                      } catch (e) {
+                                        ket = { Online: "-", Offline: "-" };
+                                      }
+
+                                      return Object.keys(ket)
+                                        .map(
+                                          (key) => `
+                                            <tr>
+                                                <td class="text-start ps-3">${key}</td>
+                                                <td>
+                                                    <span class="badge ${ket[key] === "Bersedia" ? "bg-success" : "bg-danger"}">
+                                                        ${ket[key]}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        `,
+                                        )
+                                        .join("");
+                                    })()}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered text-center">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Hari</th>
+                                    <th>08.00 - 12.00</th>
+                                    <th>12.00 - 18.00</th>
+                                    <th>18.00 - 21.00</th>
+                                    <th>Jadwal Penuh</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${(() => {
+                                  let jadwal = {};
+                                  try {
+                                    jadwal = JSON.parse(l.jadwal_free || "{}");
+                                  } catch (e) {}
+                                  const days = [
+                                    "Senin",
+                                    "Selasa",
+                                    "Rabu",
+                                    "Kamis",
+                                    "Jumat",
+                                    "Sabtu",
+                                    "Minggu",
+                                  ];
+                                  const slots = [
+                                    "08.00 - 12.00",
+                                    "12.00 - 18.00",
+                                    "18.00 - 21.00",
+                                    "Jadwal Penuh",
+                                  ];
+
+                                  return days
+                                    .map((day) => {
+                                      const dayJadwal = jadwal[day] || [];
+                                      return `
+                                            <tr>
+                                                <td class="table-light fw-bold">${day}</td>
+                                                ${slots
+                                                  .map(
+                                                    (slot) => `
+                                                    <td>
+                                                        ${dayJadwal.includes(slot) ? '<i class="bx bx-check-square text-success fs-4"></i>' : '<i class="bx bx-minus text-muted"></i>'}
+                                                    </td>
+                                                `,
+                                                  )
+                                                  .join("")}
+                                            </tr>
+                                        `;
+                                    })
+                                    .join("");
+                                })()}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <hr>
             <div class="row">
                 <div class="col-12">
@@ -391,5 +512,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  initGrid();
+  if (document.getElementById("table-recruitment-pelamar")) {
+    initGrid();
+  }
 });

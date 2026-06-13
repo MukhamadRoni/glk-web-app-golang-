@@ -45,6 +45,7 @@ func main() {
 		&models.Admin{},
 		&models.Pelamar{},
 		&models.Lamaran{},
+		&models.ConfidenceScore{},
 	)
 	// Seed Mega Project Menus
 	var menuCount int64
@@ -316,6 +317,7 @@ func newAdminApp() *fiber.App {
 	// ── Protected Web Routes ─────────────────────────────────────────────
 	web := app.Group("/admin", adminCtrl.AuthRequired)
 	web.Get("/dashboard", adminCtrl.ShowDashboard)
+	web.Get("/recruitment/dashboard", adminCtrl.ShowRecruitmentDashboard)
 	web.Get("/applicants", adminCtrl.ShowApplicants)
 	web.Get("/applicants/:id", adminCtrl.ShowApplicant)
 
@@ -325,6 +327,7 @@ func newAdminApp() *fiber.App {
 	web.Get("/recruitment/master/bank-soal", adminCtrl.ShowBankSoalPage)
 	web.Get("/recruitment/master/bank-soal/form", adminCtrl.ShowBankSoalFormPage)
 	web.Get("/recruitment/master/bank-soal/form/:id", adminCtrl.ShowBankSoalFormPage)
+	web.Get("/recruitment/master/confidence-score", adminCtrl.ShowConfidenceScorePage)
 
 	// Recruitment Transactions
 	web.Get("/recruitment/transaksi/pelamar", adminCtrl.ShowRecruitmentPelamar)
@@ -351,6 +354,12 @@ func newAdminApp() *fiber.App {
 	api.Get("/recruitment/pelamar", adminAPIv1.ListRecruitmentPelamar)
 	api.Get("/recruitment/pelamar/:id", adminAPIv1.GetRecruitmentPelamarDetail)
 	api.Patch("/recruitment/pelamar/:id/correction", adminAPIv1.UpdateRecruitmentCorrection)
+
+	// Master Confidence Score API
+	api.Get("/confidence-score", adminCtrl.GetConfidenceScoreList)
+	api.Post("/confidence-score", adminCtrl.CreateConfidenceScore)
+	api.Put("/confidence-score/:id", adminCtrl.UpdateConfidenceScore)
+	api.Delete("/confidence-score/:id", adminCtrl.DeleteConfidenceScore)
 
 	// ── 404 Handler ──────────────────────────────────────────────────────
 	app.Use(func(c *fiber.Ctx) error {

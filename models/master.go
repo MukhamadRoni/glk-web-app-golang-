@@ -93,3 +93,15 @@ type BankSoalC struct {
 	UpdatedAt     time.Time      `json:"updated_at"`
 	DeletedAt     gorm.DeletedAt `gorm:"index" json:"-"`
 }
+
+// ConfidenceScore represents scoring categories for test results
+type ConfidenceScore struct {
+	ID        uint           `gorm:"primarykey" json:"id"`
+	Name      string         `gorm:"size:100;not null" json:"name"`
+	Color     string         `gorm:"size:20;not null" json:"color"` // Hex format e.g. #FF0000
+	MinScore  int            `gorm:"not null" json:"min_score"`
+	MaxScore  int            `gorm:"not null" json:"max_score"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+}
