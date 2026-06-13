@@ -69,7 +69,7 @@ func VerifyMagicLink(c *fiber.Ctx) error {
 		return c.Redirect("/login?error=Link telah kedaluwarsa atau tidak valid")
 	}
 
-	pelamar, err := models.GetPelamarByEmail(config.DB, email)
+	pelamar, err := models.GetPelamarByEmailUnscoped(config.DB, email)
 	if err != nil {
 		// Auto-register pelamar if not exists
 		namePart := strings.Split(email, "@")[0]
@@ -79,6 +79,11 @@ func VerifyMagicLink(c *fiber.Ctx) error {
 		}
 		if err := models.CreatePelamar(config.DB, pelamar); err != nil {
 			return c.Redirect("/login?error=Gagal membuat akun otomatis")
+		}
+	} else if pelamar.DeletedAt.Valid {
+		// Restore soft-deleted account (Undelete)
+		if err := config.DB.Unscoped().Model(pelamar).Update("deleted_at", nil).Error; err != nil {
+			return c.Redirect("/login?error=Gagal mengaktifkan kembali akun")
 		}
 	}
 

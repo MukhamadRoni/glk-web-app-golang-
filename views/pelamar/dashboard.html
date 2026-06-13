@@ -3,15 +3,26 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Selamat Datang, {{ .Name }}!</h5>
-                <p class="text-muted">Ini adalah dashboard pelamar Anda. Pantau status lamaran di sini.</p>
+                <p class="text-muted">
+                    Ini adalah dashboard pelamar Anda. Pantau status lamaran di
+                    sini.
+                </p>
 
                 {{ if .HasPendingTest }}
-                <div class="alert alert-warning mt-3 d-flex align-items-center justify-content-between" role="alert">
+                <div
+                    class="alert alert-warning mt-3 d-flex align-items-center justify-content-between"
+                    role="alert"
+                >
                     <div>
-                        <i class="bx bx-error-circle me-2 font-size-18 align-middle"></i>
-                        <strong>Perhatian!</strong> Anda memiliki Tes Akademik yang belum diselesaikan.
+                        <i
+                            class="bx bx-error-circle me-2 font-size-18 align-middle"
+                        ></i>
+                        <strong>Perhatian!</strong> Anda memiliki Tes Akademik
+                        yang belum diselesaikan.
                     </div>
-                    <a href="/test/intro" class="btn btn-sm btn-warning fw-bold">Lanjutkan Tes</a>
+                    <a href="/test/intro" class="btn btn-sm btn-warning fw-bold"
+                        >Lanjutkan Tes</a
+                    >
                 </div>
                 {{ end }}
 
@@ -29,23 +40,53 @@
                             {{ range $i, $app := .Applications }}
                             <tr>
                                 <td>{{ add $i 1 }}</td>
-                                <td>Tutor {{ $app.TargetMapel.Name }} - {{ $app.TargetJenjang.Name }}</td>
-                                <td>{{ $app.CreatedAt.Format "02 Jan 2006" }}</td>
+                                <td>
+                                    Tutor {{ $app.TargetMapel.Name }} - {{
+                                    $app.TargetJenjang.Name }}
+                                </td>
+                                <td>
+                                    {{ $app.CreatedAt.Format "02 Jan 2006" }}
+                                </td>
                                 <td>
                                     {{ if eq $app.Status "Diterima" }}
-                                    <span class="badge badge-soft-success">Diterima</span>
+                                    <span class="badge badge-soft-success"
+                                        >Diterima</span
+                                    >
                                     {{ else if eq $app.Status "Ditolak" }}
-                                    <span class="badge badge-soft-danger">Ditolak</span>
+                                    <span class="badge badge-soft-danger"
+                                        >Ditolak</span
+                                    >
+                                    <a
+                                        href="/apply"
+                                        class="btn btn-xs btn-outline-primary ms-2"
+                                        >Melamar Lagi</a
+                                    >
+                                    {{ else if eq $app.Status "Berhenti" }}
+                                    <span class="badge badge-soft-secondary"
+                                        >Berhenti</span
+                                    >
+                                    <a
+                                        href="/apply"
+                                        class="btn btn-xs btn-outline-primary ms-2"
+                                        >Melamar Lagi</a
+                                    >
                                     {{ else }}
-                                    <span class="badge badge-soft-warning">{{ $app.Status }}</span>
+                                    <span class="badge badge-soft-warning"
+                                        >{{ $app.Status }}</span
+                                    >
                                     {{ end }}
                                 </td>
                             </tr>
                             {{ else }}
                             <tr>
-                                <td colspan="4" class="text-center text-muted py-4">
+                                <td
+                                    colspan="4"
+                                    class="text-center text-muted py-4"
+                                >
                                     Anda belum memiliki lamaran.
-                                    <a href="/apply" class="text-primary">Lamar sekarang</a>
+                                    <a href="/apply" class="text-primary"
+                                        >Lamar sekarang</a
+                                    >
                                 </td>
                             </tr>
                             {{ end }}

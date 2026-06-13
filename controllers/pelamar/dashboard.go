@@ -25,7 +25,8 @@ func ShowDashboard(c *fiber.Ctx) error {
 		return c.Redirect("/login")
 	}
 
-	hasApplied, lamaran, err := models.CheckIfPelamarHasApplied(config.DB, pelamarID)
+	// Use GetLatestApplication to show whatever state they are in
+	hasApplied, lamaran, err := models.GetLatestApplication(config.DB, pelamarID)
 
 	var applications []models.Lamaran
 	hasPendingTest := false
@@ -33,8 +34,8 @@ func ShowDashboard(c *fiber.Ctx) error {
 	if err == nil && hasApplied && lamaran != nil {
 		applications = append(applications, *lamaran)
 
-		// Check if test exists for this lamaran
-		if lamaran.Status != "Selesai Tes" {
+		// Check if test exists for this lamaran, ONLY if status is Pending
+		if lamaran.Status == "Pending" {
 			var count int64
 			config.DB.Model(&models.BankSoalA{}).Where("jenis_pendidikan_id = ? AND mata_pelajaran_id = ? AND active = 'T'",
 				lamaran.TargetJenjangID, lamaran.TargetMapelID).Count(&count)
@@ -54,8 +55,8 @@ func ShowDashboard(c *fiber.Ctx) error {
 	}), "layouts/horizontal")
 }
 
-// ShowApply renders the job application form.
-func ShowApply(c *fiber.Ctx) error {
+// ShowApplyPage renders the application form page.
+func ShowApplyPage(c *fiber.Ctx) error {
 	pelamarID, ok := c.Locals("pelamar_id").(uint)
 	if !ok {
 		return c.Redirect("/login")
@@ -66,7 +67,8 @@ func ShowApply(c *fiber.Ctx) error {
 		return c.Redirect("/login")
 	}
 
-	hasApplied, lamaran, err := models.CheckIfPelamarHasApplied(config.DB, pelamarID)
+	// Block only if they have an active (not rejected/stopped) application
+	hasActive, lamaran, err := models.GetActiveApplication(config.DB, pelamarID)
 	if err != nil {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
@@ -77,10 +79,11 @@ func ShowApply(c *fiber.Ctx) error {
 		"Description": "Isi form lamaran di bawah ini",
 		"Name":        pelamar.Name,
 		"Email":       pelamar.Email,
-		"HasApplied":  hasApplied,
+		"HasApplied":  hasActive,
 		"Lamaran":     lamaran,
 	}), "layouts/horizontal")
 }
+
 
 // ProcessApply handles the job application submission.
 func ProcessApply(c *fiber.Ctx) error {
@@ -91,9 +94,9 @@ func ProcessApply(c *fiber.Ctx) error {
 
 	pelamar, _ := models.GetPelamarByID(config.DB, pelamarID)
 
-	// Prevent double submission
-	hasApplied, _, err := models.CheckIfPelamarHasApplied(config.DB, pelamarID)
-	if err != nil || hasApplied {
+	// Prevent double submission ONLY IF there is an active application
+	hasActive, _, err := models.GetActiveApplication(config.DB, pelamarID)
+	if err != nil || hasActive {
 		return c.Redirect("/dashboard")
 	}
 

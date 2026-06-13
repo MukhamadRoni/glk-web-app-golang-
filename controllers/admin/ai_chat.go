@@ -8,6 +8,7 @@ import (
 	"glk-web-app/models"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -21,11 +22,16 @@ func ShowChatPage(c *fiber.Ctx) error {
 	config.DB.Find(&mcps)
 	config.DB.Find(&skills)
 
+	// Fetch Monthly Token Usage from Redis
+	monthKey := fmt.Sprintf("ai:usage:tokens:%s", time.Now().Format("2006-01"))
+	tokenUsage, _ := config.RDB.Get(config.Ctx, monthKey).Int64()
+
 	return c.Render("admin/ai/chat", contextData(c, fiber.Map{
-		"Title":      "AI Chat Assistant",
-		"Breadcrumb": "AI Mode / Chat",
-		"MCPs":       mcps,
-		"Skills":     skills,
+		"Title":       "AI Chat Assistant",
+		"Breadcrumb":  "AI Mode / Chat",
+		"MCPs":        mcps,
+		"Skills":      skills,
+		"TokensMonth": tokenUsage,
 	}), "layouts/base")
 }
 
@@ -45,6 +51,11 @@ type ChatCompletionResponse struct {
 			Role    string `json:"role"`
 		} `json:"message"`
 	} `json:"choices"`
+	Usage struct {
+		PromptTokens     int64 `json:"prompt_tokens"`
+		CompletionTokens int64 `json:"completion_tokens"`
+		TotalTokens      int64 `json:"total_tokens"`
+	} `json:"usage"`
 }
 
 // ProcessChat handles the communication with Aivene API
@@ -60,7 +71,15 @@ func ProcessChat(c *fiber.Ctx) error {
 	}
 
 	// 1. Construct the System Prompt based on MCP and Skill
-	systemPrompt := "You are a helpful HR and Company assistant for Gurulesku."
+	systemPrompt := `You are the "Gurulesku AI Expert", a highly specialized HR and Recruitment Intelligence system.
+Your persona is professional, analytical, and direct.
+
+RULES:
+- DO NOT provide generic information about tutoring or general education unless specifically asked.
+- ALWAYS prioritize using the provided COMPANY CONTEXT and PROFILING GUIDELINE.
+- Keep responses concise, structured, and focused on recruitment data or company policy.
+- If you don't know the answer based on the context, state it clearly rather than giving general advice.
+- Avoid using long generic bullet points for common knowledge.`
 
 	if req.MCPID > 0 {
 		var mcp models.CompanyMCP
@@ -110,23 +129,78 @@ func ProcessChat(c *fiber.Ctx) error {
 	}
 
 	var aiResp ChatCompletionResponse
-	json.NewDecoder(resp.Body).Decode(&aiResp)
+	if err := json.NewDecoder(resp.Body).Decode(&aiResp); err != nil {
+		return c.Status(500).JSON(fiber.Map{"success": false, "message": "Failed to parse AI response"})
+	}
 
 	aiMessage := ""
 	if len(aiResp.Choices) > 0 {
 		aiMessage = aiResp.Choices[0].Message.Content
 	}
 
+	// 3. Track Usage in Redis
+	if aiResp.Usage.TotalTokens > 0 {
+		monthKey := fmt.Sprintf("ai:usage:tokens:%s", time.Now().Format("2006-01"))
+		config.RDB.IncrBy(config.Ctx, monthKey, aiResp.Usage.TotalTokens)
+		// Set expiry to 60 days to keep history for a bit
+		config.RDB.Expire(config.Ctx, monthKey, 60*24*time.Hour)
+	}
+
 	return c.JSON(fiber.Map{
 		"success": true,
 		"message": aiMessage,
+		"usage":   aiResp.Usage,
 	})
 }
 
-// fetchFileContent tries to download content from GDrive URL (heuristic/proxy)
+// fetchFileContent actually downloads the content from Google Drive URL
 func fetchFileContent(driveURL string) (string, error) {
-	// Heuristic: Many AI models work better if we at least provide the metadata.
-	// For full content, we'd need to convert GDrive URL to export link if it's a doc.
-	// For now, let's return a note that the link is attached.
-	return "Document link: " + driveURL, nil
+	if driveURL == "" {
+		return "", nil
+	}
+
+	// 1. Convert GDrive Preview Link to Direct Download Link
+	// From: https://drive.google.com/file/d/FILE_ID/view?usp=drivesdk
+	// To: https://drive.google.com/uc?export=download&id=FILE_ID
+	fileID := ""
+	if strings.Contains(driveURL, "drive.google.com") {
+		parts := strings.Split(driveURL, "/")
+		for i, part := range parts {
+			if part == "d" && i+1 < len(parts) {
+				fileID = parts[i+1]
+				break
+			}
+		}
+	}
+
+	if fileID == "" {
+		return "Document link: " + driveURL, nil
+	}
+
+	downloadURL := fmt.Sprintf("https://drive.google.com/uc?export=download&id=%s", fileID)
+
+	// 2. Fetch the content
+	client := &http.Client{Timeout: 10 * time.Second}
+	resp, err := client.Get(downloadURL)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return "Note: Document content could not be fetched (Access Denied or Not Downloadable).", nil
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	// 3. Return the content (limited to 50k chars to avoid token limit)
+	content := string(body)
+	if len(content) > 50000 {
+		content = content[:50000] + "... (truncated)"
+	}
+
+	return content, nil
 }

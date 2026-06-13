@@ -54,8 +54,31 @@ type Lamaran struct {
 
 // CheckIfPelamarHasApplied checks if a pelamar has already submitted an application.
 func CheckIfPelamarHasApplied(db *gorm.DB, pelamarID uint) (bool, *Lamaran, error) {
+	return GetActiveApplication(db, pelamarID)
+}
+
+// GetActiveApplication returns an application that is NOT rejected or stopped.
+// This is used to prevent double applications.
+func GetActiveApplication(db *gorm.DB, pelamarID uint) (bool, *Lamaran, error) {
 	var lamaran Lamaran
-	err := db.Where("pelamar_id = ?", pelamarID).Preload("TargetJenjang").Preload("TargetMapel").First(&lamaran).Error
+	err := db.Where("pelamar_id = ? AND status NOT IN ('Ditolak', 'Berhenti')", pelamarID).
+		Order("id DESC").
+		Preload("TargetJenjang").Preload("TargetMapel").First(&lamaran).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return false, nil, nil
+		}
+		return false, nil, err
+	}
+	return true, &lamaran, nil
+}
+
+// GetLatestApplication returns the most recent application regardless of status.
+func GetLatestApplication(db *gorm.DB, pelamarID uint) (bool, *Lamaran, error) {
+	var lamaran Lamaran
+	err := db.Where("pelamar_id = ?", pelamarID).
+		Order("id DESC").
+		Preload("TargetJenjang").Preload("TargetMapel").First(&lamaran).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return false, nil, nil

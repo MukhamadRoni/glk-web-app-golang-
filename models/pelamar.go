@@ -50,6 +50,13 @@ func GetPelamarByEmail(db *gorm.DB, email string) (*Pelamar, error) {
 	return &p, err
 }
 
+// GetPelamarByEmailUnscoped retrieves a pelamar including those soft-deleted.
+func GetPelamarByEmailUnscoped(db *gorm.DB, email string) (*Pelamar, error) {
+	var p Pelamar
+	err := db.Unscoped().Where("email = ?", email).First(&p).Error
+	return &p, err
+}
+
 // GetPelamarByID retrieves a pelamar by their primary key.
 func GetPelamarByID(db *gorm.DB, id uint) (*Pelamar, error) {
 	var p Pelamar

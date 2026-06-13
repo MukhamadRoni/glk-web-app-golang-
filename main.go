@@ -221,7 +221,7 @@ func newPelamarApp() *fiber.App {
 	// ── Protected Routes (require pelamar session) ───────────────────────
 	protected := app.Group("/", pelamarCtrl.AuthRequired)
 	protected.Get("/dashboard", pelamarCtrl.ShowDashboard)
-	protected.Get("/apply", pelamarCtrl.ShowApply)
+	protected.Get("/apply", pelamarCtrl.ShowApplyPage)
 	protected.Post("/apply", pelamarCtrl.ProcessApply)
 
 	// Test Akademik
