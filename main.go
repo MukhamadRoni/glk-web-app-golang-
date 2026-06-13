@@ -332,6 +332,7 @@ func newAdminApp() *fiber.App {
 	web.Get("/recruitment/master/confidence-score", adminCtrl.ShowConfidenceScorePage)
 	web.Get("/ai/mcp", adminCtrl.ShowMCPPage)
 	web.Get("/ai/profiling", adminCtrl.ShowProfilingPage)
+	web.Get("/ai/chat", adminCtrl.ShowChatPage)
 
 	// Recruitment Transactions
 	web.Get("/recruitment/transaksi/pelamar", adminCtrl.ShowRecruitmentPelamar)
@@ -379,6 +380,9 @@ func newAdminApp() *fiber.App {
 	api.Put("/ai/profiling/:id", adminCtrl.UpdateProfiling)
 	api.Delete("/ai/profiling/:id", adminCtrl.DeleteProfiling)
 	api.Post("/ai/profiling/upload-proxy", adminCtrl.UploadProfilingProxy)
+
+	// AI Chat API
+	api.Post("/ai/chat", adminCtrl.ProcessChat)
 
 	// ── 404 Handler ──────────────────────────────────────────────────────
 	app.Use(func(c *fiber.Ctx) error {

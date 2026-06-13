@@ -1,0 +1,99 @@
+<div class="row h-100">
+    <!-- Sidebar Settings -->
+    <div class="col-xl-3">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0 text-white"><i class="bx bx-cog me-2"></i> Konfigurasi AI</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Pilih Konteks Perusahaan (MCP)</label>
+                    <select id="chatMCP" class="form-select border-primary-subtle">
+                        <option value="">-- Tanpa Konteks --</option>
+                        {{ range .MCPs }}
+                        <option value="{{ .ID }}">{{ .Name }}</option>
+                        {{ end }}
+                    </select>
+                    <div class="form-text">Memberikan AI pemahaman tentang profil perusahaan.</div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Pilih Profiling Skill</label>
+                    <select id="chatSkill" class="form-select border-info-subtle">
+                        <option value="">-- Tanpa Skill --</option>
+                        {{ range .Skills }}
+                        <option value="{{ .ID }}">{{ .Name }}</option>
+                        {{ end }}
+                    </select>
+                    <div class="form-text">Gunakan panduan analisis spesifik untuk AI.</div>
+                </div>
+
+                <hr>
+
+                <div class="d-grid">
+                    <button class="btn btn-soft-danger" id="btnClearChat">
+                        <i class="bx bx-trash me-1"></i> Bersihkan Chat
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="col-xl-9">
+        <div class="card h-100 shadow-sm border-0 d-flex flex-column" style="min-height: 600px;">
+            <div class="card-header bg-white border-bottom d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <div class="avatar-sm me-3">
+                        <span class="avatar-title bg-soft-primary text-primary rounded-circle font-size-18">
+                            <i class="bx bx-bot"></i>
+                        </span>
+                    </div>
+                    <div>
+                        <h5 class="card-title mb-0">Aivene Assistant</h5>
+                        <p class="text-success mb-0 font-size-11"><i class="bx bxs-circle me-1"></i> AI Online</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Messages Container -->
+            <div class="card-body flex-grow-1 overflow-auto p-4" id="chatContainer" style="background-color: #f8f9fa;">
+                <div class="text-center my-5" id="welcomeMsg">
+                    <div class="avatar-lg mx-auto mb-3">
+                        <span class="avatar-title bg-soft-primary text-primary rounded-circle font-size-24">
+                            <i class="bx bx-chat"></i>
+                        </span>
+                    </div>
+                    <h4>Halo, Ada yang bisa saya bantu?</h4>
+                    <p class="text-muted mx-auto" style="max-width: 400px;">
+                        Anda dapat menanyakan informasi seputar rekrutmen, kebijakan perusahaan, atau melakukan analisis kandidat menggunakan konteks MCP dan Profiling yang tersedia.
+                    </p>
+                </div>
+                <!-- Messages populated via JS -->
+            </div>
+
+            <!-- Input Area -->
+            <div class="card-footer bg-white border-top p-3">
+                <form id="formChat" class="d-flex gap-2">
+                    <input type="text" id="chatInput" class="form-control border-0 bg-light py-2" placeholder="Ketik pesan Anda di sini..." required autocomplete="off">
+                    <button type="submit" class="btn btn-primary px-4" id="btnSend">
+                        <i class="bx bx-send"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #chatContainer::-webkit-scrollbar { width: 6px; }
+    #chatContainer::-webkit-scrollbar-thumb { background: #e2e5e8; border-radius: 10px; }
+    .message { margin-bottom: 1.5rem; max-width: 80%; }
+    .message-user { margin-left: auto; }
+    .message-content { padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.5; }
+    .message-user .message-content { background-color: #F87242; color: white; border-bottom-right-radius: 2px; }
+    .message-ai .message-content { background-color: white; color: #495057; border-bottom-left-radius: 2px; box-shadow: 0 2px 4px rgba(0,0,0,.05); }
+    .typing-indicator { font-style: italic; font-size: 12px; color: #adb5bd; }
+</style>
+
+<script src="/static/js/ai_chat.js"></script>
