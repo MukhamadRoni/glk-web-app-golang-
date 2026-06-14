@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"glk-web-app/config"
+	"log"
 	"net/smtp"
 )
 
@@ -15,6 +16,7 @@ func SendMagicLinkEmail(toEmail, magicLink string) error {
 	pass := config.GetEnv("SMTP_PASS", "")
 
 	if user == "" || pass == "" {
+		log.Println("[EMAIL] SMTP credentials are not set in .env")
 		return fmt.Errorf("SMTP credentials are not set in .env")
 	}
 
@@ -116,6 +118,7 @@ func SendMagicLinkEmail(toEmail, magicLink string) error {
 	// Logic pengiriman email tetap sama
 	err := smtp.SendMail(addr, auth, user, []string{toEmail}, msg)
 	if err != nil {
+		log.Printf("[EMAIL ERROR] Standard SendMail failed: %v", err)
 		if port == "465" {
 			tlsconfig := &tls.Config{
 				InsecureSkipVerify: false,
@@ -123,13 +126,16 @@ func SendMagicLinkEmail(toEmail, magicLink string) error {
 			}
 			conn, err := tls.Dial("tcp", addr, tlsconfig)
 			if err != nil {
+				log.Printf("[EMAIL ERROR] TLS Dial failed: %v", err)
 				return err
 			}
 			c, err := smtp.NewClient(conn, host)
 			if err != nil {
+				log.Printf("[EMAIL ERROR] NewClient failed: %v", err)
 				return err
 			}
 			if err = c.Auth(auth); err != nil {
+				log.Printf("[EMAIL ERROR] SMTP Auth failed: %v", err)
 				return err
 			}
 			if err = c.Mail(user); err != nil {
