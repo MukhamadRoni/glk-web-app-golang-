@@ -36,25 +36,23 @@ func ProcessLogin(c *fiber.Ctx) error {
 		}, "layouts/auth")
 	}
 
-	// FOR DEVELOPMENT: Bypass email sending and redirect directly to magic link
-	// baseURL := config.GetEnv("APP_URL", fmt.Sprintf("http://localhost:%s", config.GetEnv("PELAMAR_PORT", "8081")))
-	// magicLink := fmt.Sprintf("%s/magic-link?token=%s", baseURL, token)
+	baseURL := config.GetEnv("APP_URL", "http://localhost:8081")
+	// Ensure baseURL doesn't have trailing slash for consistency
+	baseURL = strings.TrimSuffix(baseURL, "/")
+	magicLink := baseURL + "/magic-link?token=" + token
 
-	// err = utils.SendMagicLinkEmail(email, magicLink)
-	// if err != nil {
-	// 	fmt.Println("Error sending email:", err)
-	// 	return c.Render("pelamar/login", fiber.Map{
-	// 		"Title": "Masuk",
-	// 		"Error": "Gagal mengirim email, periksa konfigurasi SMTP Anda.",
-	// 	}, "layouts/auth")
-	// }
+	err = utils.SendMagicLinkEmail(email, magicLink)
+	if err != nil {
+		return c.Render("pelamar/login", fiber.Map{
+			"Title": "Masuk",
+			"Error": "Gagal mengirim email, periksa konfigurasi SMTP Anda.",
+		}, "layouts/auth")
+	}
 
-	// return c.Render("pelamar/login_sent", fiber.Map{
-	// 	"Title": "Cek Email Anda",
-	// 	"Email": email,
-	// }, "layouts/auth")
-
-	return c.Redirect("/magic-link?token=" + token)
+	return c.Render("pelamar/login_sent", fiber.Map{
+		"Title": "Cek Email Anda",
+		"Email": email,
+	}, "layouts/auth")
 }
 
 // VerifyMagicLink handles the callback from the email link.

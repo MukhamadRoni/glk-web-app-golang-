@@ -1,7 +1,7 @@
 {{define "styles"}}
 <style>
     .authentication-bg {
-        background-image: url('/static/images/bg.png');
+        background-image: url("/static/images/bg.png");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -21,52 +21,67 @@
 <div class="p-2 mt-4">
     {{ if .Error }}
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             Swal.fire({
                 title: "Gagal",
                 text: "{{ .Error }}",
                 icon: "error",
                 confirmButtonColor: "#1f58c7",
-                confirmButtonText: "Ok"
+                confirmButtonText: "Ok",
             });
         });
     </script>
     {{ end }}
 
     <form action="/login" method="POST">
-
         <div class="mb-3">
             <label class="form-label" for="email">Email</label>
             <div class="position-relative input-custom-icon">
-                <input type="email" class="form-control" id="email" name="email"
-                    placeholder="Masukkan email aktif Anda" required autofocus>
+                <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    placeholder="Masukkan email aktif Anda"
+                    required
+                    autofocus
+                />
                 <span class="bx bx-envelope"></span>
             </div>
-            <div class="form-text mt-2 text-muted">Kami akan mengirimkan link rahasia ke email Anda untuk masuk.</div>
+            <div class="form-text mt-2 text-muted">
+                Kami akan mengirimkan link rahasia ke email Anda untuk masuk.
+            </div>
         </div>
 
         <div class="mt-4">
-            <button class="btn btn-primary w-100 waves-effect waves-light" type="submit" id="btn-pelamar-login">
+            <button
+                class="btn btn-primary w-100 waves-effect waves-light"
+                type="submit"
+                id="btn-pelamar-login"
+            >
                 Kirim Link Login
             </button>
         </div>
 
         <div class="mt-4 text-center">
-            <p class="mb-0">Belum punya akun? Tenang, akun otomatis dibuat saat Anda masuk pertama kali.</p>
+            <p class="mb-0">
+                Belum punya akun? Tenang, akun otomatis dibuat saat Anda masuk
+                pertama kali.
+            </p>
         </div>
-
     </form>
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const loginForm = document.querySelector('form[action="/login"]');
-        const btnLogin = document.getElementById('btn-pelamar-login');
+        const btnLogin = document.getElementById("btn-pelamar-login");
 
         if (loginForm) {
-            loginForm.addEventListener('submit', function() {
+            loginForm.addEventListener("submit", function () {
                 btnLogin.disabled = true;
-                btnLogin.innerHTML = '<i class="bx bx-loader bx-spin font-size-16 align-middle me-2"></i> Mengirim Link...';
+                btnLogin.innerHTML =
+                    '<i class="bx bx-loader bx-spin font-size-16 align-middle me-2"></i> Mengirim Link...';
             });
         }
     });

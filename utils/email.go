@@ -20,20 +20,87 @@ func SendMagicLinkEmail(toEmail, magicLink string) error {
 
 	auth := smtp.PlainAuth("", user, pass, host)
 
-	subject := "Login Portal Pelamar - GLK"
+	subject := "Masuk ke Portal Pelamar - Gurulesku"
+
+	// Menggunakan desain modern, minimalis, dan clean
 	body := fmt.Sprintf(`
+	<!DOCTYPE html>
 	<html>
-	<body>
-		<h2>Halo Pelamar!</h2>
-		<p>Anda telah meminta link untuk masuk ke Portal Pelamar GLK.</p>
-		<p>Silakan klik tombol di bawah ini untuk masuk secara otomatis:</p>
-		<a href="%s" style="display:inline-block;padding:10px 20px;background-color:#F87242;color:#ffffff;text-decoration:none;border-radius:5px;font-weight:bold;">Masuk ke Portal</a>
-		<br><br>
-		<p>Atau copy paste link berikut di browser Anda:</p>
-		<p><a href="%s">%s</a></p>
-		<p>Link ini hanya berlaku untuk sementara waktu.</p>
-		<p>Terima kasih,</p>
-		<p>Tim Rekrutmen GLK</p>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			/* Efek interaktif untuk email client yang mendukung */
+			.btn-login:hover {
+				background-color: #E05D2D !important;
+				box-shadow: 0 4px 12px rgba(248, 114, 66, 0.3) !important;
+			}
+			@media only screen and (max-width: 600px) {
+				.main-container {
+					width: 100%% !important;
+					border-radius: 0 !important;
+				}
+				.content-padding {
+					padding: 30px 20px !important;
+				}
+			}
+		</style>
+	</head>
+	<body style="margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #F8FAFC; -webkit-font-smoothing: antialiased;">
+		<table border="0" cellpadding="0" cellspacing="0" width="100%%" style="background-color: #F8FAFC; padding: 40px 15px;">
+			<tr>
+				<td align="center">
+					<table class="main-container" border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);">
+
+						<tr>
+							<td align="center" style="padding: 40px 0 30px 0; background-color: #ffffff;">
+								<div style="width: 60px; height: 6px; background-color: #F87242; border-radius: 3px; margin-bottom: 20px;"></div>
+								<h2 style="margin: 0; color: #1E293B; font-weight: 700; font-size: 24px; letter-spacing: -0.5px;">Portal Pelamar</h2>
+								<p style="margin: 5px 0 0 0; color: #64748B; font-size: 14px; font-weight: 500;">PT Gurulesku Nusantara</p>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="content-padding" style="padding: 0 40px 30px 40px;">
+								<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+									<tr>
+										<td style="color: #334155; font-size: 16px; line-height: 1.6;">
+											<p style="margin-top: 0; font-weight: 600; color: #0F172A; font-size: 18px;">Halo,</p>
+											<p>Kami menerima permintaan untuk masuk ke akun Anda di portal rekrutmen kami. Silakan klik tombol di bawah ini untuk melanjutkan.</p>
+										</td>
+									</tr>
+
+									<tr>
+										<td align="center" style="padding: 35px 0;">
+											<a href="%s" class="btn-login" style="background-color: #F87242; color: #ffffff; padding: 16px 40px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block; transition: all 0.2s ease;">Masuk ke Akun Saya</a>
+										</td>
+									</tr>
+
+									<tr>
+										<td style="background-color: #F1F5F9; border-radius: 8px; padding: 20px;">
+											<p style="margin: 0 0 10px 0; color: #64748B; font-size: 13px; font-weight: 600;">Jika tombol di atas tidak berfungsi, salin link berikut:</p>
+											<p style="margin: 0; word-break: break-all;"><a href="%s" style="color: #3B82F6; text-decoration: underline; font-size: 13px;">%s</a></p>
+										</td>
+									</tr>
+
+									<tr>
+										<td style="padding-top: 30px;">
+											<p style="margin: 0; color: #94A3B8; font-size: 13px; line-height: 1.5;">*Link ajaib ini hanya berlaku selama 15 menit dan hanya dapat digunakan satu kali demi keamanan data Anda.</p>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+
+						<tr>
+							<td align="center" style="padding: 25px 40px; background-color: #F8FAFC; border-top: 1px solid #E2E8F0;">
+								<p style="margin: 0; color: #94A3B8; font-size: 12px; font-weight: 500;">&copy; 2026 PT Gurulesku Nusantara. Hak cipta dilindungi.</p>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
 	</body>
 	</html>
 	`, magicLink, magicLink, magicLink)
@@ -46,11 +113,9 @@ func SendMagicLinkEmail(toEmail, magicLink string) error {
 
 	addr := host + ":" + port
 
-	// We use tls for port 465, but for 587 we use starttls. 
-	// smtp.SendMail handles STARTTLS automatically if the server supports it.
+	// Logic pengiriman email tetap sama
 	err := smtp.SendMail(addr, auth, user, []string{toEmail}, msg)
 	if err != nil {
-		// fallback to TLS if port is 465
 		if port == "465" {
 			tlsconfig := &tls.Config{
 				InsecureSkipVerify: false,

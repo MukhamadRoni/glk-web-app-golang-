@@ -1,108 +1,147 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <title>{{.Title}} | GLK Web App</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{{.Description}}">
-    <link rel="shortcut icon" href="/static/images/favicon.ico">
-    <link href="/static/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
-    <link href="/static/css/icons.min.css" rel="stylesheet" type="text/css" />
-    <link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
-    <link href="/static/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+    <head>
+        <meta charset="utf-8" />
+        <title>{{.Title}} | GLK Web App</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="{{.Description}}" />
+        <link rel="shortcut icon" href="/static/images/favicon.ico" />
+        <link
+            href="/static/css/bootstrap.min.css"
+            id="bootstrap-style"
+            rel="stylesheet"
+            type="text/css"
+        />
+        <link
+            href="/static/css/icons.min.css"
+            rel="stylesheet"
+            type="text/css"
+        />
+        <link
+            href="/static/libs/sweetalert2/sweetalert2.min.css"
+            rel="stylesheet"
+            type="text/css"
+        />
+        <link
+            href="/static/css/app.min.css"
+            id="app-style"
+            rel="stylesheet"
+            type="text/css"
+        />
 
-    <!-- Custom Theme Colors -->
-    <style>
-        :root, [data-bs-theme="light"] {
-            --bs-primary: #F87242 !important;
-            --bs-primary-rgb: 248, 114, 66 !important;
-            --vz-primary: #F87242 !important;
-            --vz-primary-rgb: 248, 114, 66 !important;
-        }
-        
-        .btn-primary {
-            background-color: #F87242 !important;
-            border-color: #F87242 !important;
-        }
-        .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
-            background-color: #e56538 !important;
-            border-color: #e56538 !important;
-        }
-        
-        .swal2-styled.swal2-confirm {
-            background-color: #F87242;
-            border-color: #F87242;
-        }
-        .swal2-styled.swal2-confirm:hover {
-            background-color: #e56538;
-            border-color: #e56538;
-            background-image: none;
-        }
-        
-        .bg-primary {
-            background-color: #F87242 !important;
-        }
-        
-        .text-primary {
-            color: #F87242 !important;
-        }
-        
-        /* Gridjs specific overrides */
-        .gridjs-pagination .gridjs-pages button.gridjs-currentPage {
-            background-color: #F87242 !important;
-            border-color: #F87242 !important;
-        }
-    </style>
+        <!-- Custom Theme Colors -->
+        <style>
+            :root,
+            [data-bs-theme="light"] {
+                --bs-primary: #f87242 !important;
+                --bs-primary-rgb: 248, 114, 66 !important;
+                --vz-primary: #f87242 !important;
+                --vz-primary-rgb: 248, 114, 66 !important;
+            }
 
-    {{block "styles" .}}{{end}}
+            .btn-primary {
+                background-color: #f87242 !important;
+                border-color: #f87242 !important;
+            }
+            .btn-primary:hover,
+            .btn-primary:focus,
+            .btn-primary:active {
+                background-color: #e56538 !important;
+                border-color: #e56538 !important;
+            }
 
-</head>
+            .swal2-styled.swal2-confirm {
+                background-color: #f87242;
+                border-color: #f87242;
+            }
+            .swal2-styled.swal2-confirm:hover {
+                background-color: #e56538;
+                border-color: #e56538;
+                background-image: none;
+            }
 
-<body>
-<div class="authentication-bg min-vh-100">
-    <div class="bg-overlay bg-light"></div>
-    <div class="container">
-        <div class="d-flex flex-column min-vh-100 px-3 pt-4">
-            <div class="row justify-content-center my-auto">
-                <div class="col-md-8 col-lg-6 col-xl-5">
+            .bg-primary {
+                background-color: #f87242 !important;
+            }
 
-                    <!-- Auth Card -->
-                    <div class="card shadow-lg mt-4 mb-5">
-                        <div class="card-body p-4 p-sm-5">
-                            <!-- Logo inside card -->
-                            <div class="text-center mb-4">
-                                <a href="/" class="d-inline-block auth-logo">
-                                    <img src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png" alt="logo" height="60" class="auth-logo-dark">
-                                    <img src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png" alt="logo" height="60" class="auth-logo-light">
-                                </a>
+            .text-primary {
+                color: #f87242 !important;
+            }
+
+            /* Gridjs specific overrides */
+            .gridjs-pagination .gridjs-pages button.gridjs-currentPage {
+                background-color: #f87242 !important;
+                border-color: #f87242 !important;
+            }
+        </style>
+
+        {{block "styles" .}}{{end}}
+    </head>
+
+    <body>
+        <div class="authentication-bg min-vh-100">
+            <div class="bg-overlay bg-light"></div>
+            <div class="container">
+                <div class="d-flex flex-column min-vh-100 px-3 pt-4">
+                    <div class="row justify-content-center my-auto">
+                        <div class="col-md-8 col-lg-6 col-xl-5">
+                            <!-- Auth Card -->
+                            <div class="card shadow-lg mt-4 mb-5">
+                                <div class="card-body p-4 p-sm-5">
+                                    <!-- Logo inside card -->
+                                    <div class="text-center mb-4">
+                                        <a
+                                            href="/"
+                                            class="d-inline-block auth-logo"
+                                        >
+                                            <img
+                                                src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png"
+                                                alt="logo"
+                                                height="60"
+                                                class="auth-logo-dark"
+                                            />
+                                            <img
+                                                src="/static/images/glk-assets/Logo-Guru-Lesku-ID.png"
+                                                alt="logo"
+                                                height="60"
+                                                class="auth-logo-light"
+                                            />
+                                        </a>
+                                    </div>
+
+                                    {{embed}}
+                                </div>
                             </div>
-
-                            {{embed}}
                         </div>
                     </div>
 
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="text-center p-4">
-                        <p>&copy; <script>document.write(new Date().getFullYear())</script> GLK Web App.</p>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="text-center p-4">
+                                <p>
+                                    &copy;
+                                    <script>
+                                        document.write(
+                                            new Date().getFullYear(),
+                                        );
+                                    </script>
+                                    GLK Web App.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<!-- JAVASCRIPT -->
-<script src="/static/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="/static/libs/metismenujs/metismenujs.min.js"></script>
-<script src="/static/libs/simplebar/simplebar.min.js"></script>
-<script src="/static/libs/eva-icons/eva.min.js"></script>
-<script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
-<script src="/static/js/pages/pass-addon.init.js"></script>
+        <!-- JAVASCRIPT -->
+        <script src="/static/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="/static/libs/metismenujs/metismenujs.min.js"></script>
+        <script src="/static/libs/simplebar/simplebar.min.js"></script>
+        <script src="/static/libs/eva-icons/eva.min.js"></script>
+        <script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
+        <script src="/static/js/pages/pass-addon.init.js"></script>
 
-{{block "scripts" .}}{{end}}
-</body>
+        {{block "scripts" .}}{{end}}
+    </body>
 </html>
