@@ -240,7 +240,10 @@ func newPelamarApp() *fiber.App {
 
 	// ── 404 Handler ──────────────────────────────────────────────────────
 	app.Use(func(c *fiber.Ctx) error {
-		return c.Status(fiber.StatusNotFound).SendString("Halaman tidak ditemukan")
+		return c.Status(fiber.StatusNotFound).Render("errors/404", fiber.Map{
+			"Title":   "404 Not Found",
+			"HomeURL": "/login",
+		}, "layouts/auth")
 	})
 
 	return app
@@ -386,7 +389,10 @@ func newAdminApp() *fiber.App {
 
 	// ── 404 Handler ──────────────────────────────────────────────────────
 	app.Use(func(c *fiber.Ctx) error {
-		return c.Status(fiber.StatusNotFound).SendString("Halaman tidak ditemukan")
+		return c.Status(fiber.StatusNotFound).Render("errors/404", fiber.Map{
+			"Title":   "404 Not Found",
+			"HomeURL": "/admin/login",
+		}, "layouts/auth")
 	})
 
 	return app

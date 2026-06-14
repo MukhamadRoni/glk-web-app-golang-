@@ -1,0 +1,51 @@
+{{define "styles"}}
+<style>
+    .error-title {
+        font-size: 100px !important;
+        line-height: 1;
+        font-weight: 800;
+        color: #f87242;
+        text-shadow: 4px 4px 0px rgba(248, 114, 66, 0.1);
+    }
+    .error-img {
+        max-width: 350px;
+    }
+</style>
+{{end}}
+
+<div class="my-5 pt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="text-center mb-5">
+                    <h1>404</h1>
+                    <h4 class="text-uppercase mt-4">
+                        Maaf, Halaman Tidak Ditemukan
+                    </h4>
+                    <p class="text-muted">
+                        Halaman yang Anda cari mungkin telah dihapus, namanya
+                        diubah, atau sementara tidak tersedia.
+                    </p>
+                    <div class="mt-5 text-center">
+                        <a
+                            class="btn btn-primary waves-effect waves-light"
+                            href="{{.HomeURL}}"
+                            >Kembali ke Beranda</a
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-xl-6">
+                <div>
+                    <img
+                        src="/static/images/error-img.png"
+                        alt=""
+                        class="img-fluid mx-auto d-block"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

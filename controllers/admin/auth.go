@@ -9,6 +9,10 @@ import (
 
 // ShowLogin renders the admin login page.
 func ShowLogin(c *fiber.Ctx) error {
+	sess, err := store.Get(c)
+	if err == nil && sess.Get("admin_id") != nil {
+		return c.Redirect("/admin/dashboard")
+	}
 	return c.Render("admin/login", fiber.Map{
 		"Title":       "Admin Login",
 		"Description": "Masuk ke panel admin GLK",
